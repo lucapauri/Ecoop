@@ -1,0 +1,285 @@
+{
+  "name": "pag2_registrati",
+  "version": 32,
+  "source-key": {
+    "type": "figma",
+    "file": "w8lnpfAlPyvRDXLFy7AD5I",
+    "node": "85:371",
+    "version": "3400957058",
+    "component-id": "781204f017ce670e495fceed8a4cc63f9165ec39"
+  },
+  "default": "Pag2_Registrati",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "text",
+        "id": "Registrati"
+      },
+      {
+        "type": "vector",
+        "id": "Rectangle 50"
+      },
+      {
+        "type": "group",
+        "id": "Tasto_qr"
+      },
+      {
+        "type": "text",
+        "id": "Nome"
+      },
+      {
+        "type": "text",
+        "id": "Testo secondario"
+      },
+      {
+        "type": "text",
+        "id": "Scansiona"
+      }
+    ],
+    "modes": {
+      "Pag2_Registrati": {
+        "rules": [
+          {
+            "id": "top_level",
+            "is-structured": "false",
+            "children": [
+              "Registrati",
+              "Rectangle 50",
+              "Tasto_qr",
+              "Nome",
+              "Testo secondario"
+            ],
+            "background-color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "1.0"
+            }
+          },
+          {
+            "id": "Registrati",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "64.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "64.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "247.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "56.0"
+              }
+            },
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "0.0"
+            },
+            "text-content": "Registrati",
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-size": "30.0",
+            "line-height": "1.2102272033691406",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Rectangle 50",
+            "margin": {
+              "left": "16.0",
+              "right": "16.0"
+            },
+            "border-radius": "5.0",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "0.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "129.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "50.0"
+              }
+            },
+            "vector-content": "rectangle_50.svg"
+          },
+          {
+            "id": "Tasto_qr",
+            "padding": {
+              "left": "32.0",
+              "top": "16.0",
+              "right": "32.0",
+              "bottom": "16.0"
+            },
+            "margin": {
+              "left": "16.0",
+              "right": "16.0"
+            },
+            "border-radius": "100.0",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "0.0"
+              },
+              "vertical": {
+                "attachment": "end",
+                "offset": "-355.0"
+              }
+            },
+            "tap-handler": "$Tasto_scansiona",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "children": [
+              "Scansiona"
+            ],
+            "item-spacing": "12.0",
+            "background-color": {
+              "alpha": "1.0",
+              "hue": "136.6265060240964",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            },
+            "clip-content": "false"
+          },
+          {
+            "id": "Nome",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "31.0"
+              },
+              "vertical": {
+                "attachment": "center",
+                "offset": "-251.5"
+              }
+            },
+            "font-weight": "500.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "0.7411764705882353"
+            },
+            "text-content": "$Nome",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Testo secondario",
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": "-0.5"
+              },
+              "vertical": {
+                "attachment": "end",
+                "offset": "-320.0"
+              }
+            },
+            "tap-handler": "$Tasto_secondario",
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "136.6265060240964",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            },
+            "text-content": "$Text content",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Scansiona",
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "1.0"
+            },
+            "text-content": "Scansiona QR-Code",
+            "overflow": "visible",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "Tasto_scansiona": {
+      "data-type": "void-callback",
+      "required": false,
+      "description": ""
+    },
+    "Nome": {
+      "data-type": "text",
+      "required": false,
+      "description": ""
+    },
+    "Text content": {
+      "data-type": "text",
+      "required": false,
+      "description": ""
+    },
+    "Tasto_secondario": {
+      "data-type": "void-callback",
+      "required": false,
+      "description": ""
+    }
+  },
+  "previews": [
+    {
+      "design": "Pag2_Registrati",
+      "size": {
+        "width": 375.0,
+        "height": 812.0
+      },
+      "parameters": {
+        "Nome": "Nome",
+        "Text content": "Testo secondario"
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
