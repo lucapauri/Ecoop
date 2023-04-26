@@ -3,6 +3,7 @@ package it.polito.did.gameskeleton
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,6 +20,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val URL = "https://greenapplication-bfb6f-default-rtdb.europe-west1.firebasedatabase.app/"
     private val firebase = Firebase.database(URL)
     private val firebaseAuth = Firebase.auth
+    val teamNames = listOf("team1", "team2", "team3", "team4")
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -47,10 +49,15 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val players: LiveData<Map<String, String>> = mutablePlayers
 
+    private val mutableTurn = MutableLiveData<String>().also {
+        it.value = ""
+    }
+    val turn: LiveData<String> = mutableTurn
+
+
 
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
         val teams = players.keys.groupBy { players[it].toString() }
-        val teamNames = listOf("team1", "team2", "team3", "team4")
         val sizes = teamNames.map{ teams[it]?.size ?: 0 }
         val min: Int = sizes.stream().min(Integer::compare).get()
         var index = sizes.indexOf(min)
@@ -155,6 +162,17 @@ class GameManager(private val scope:CoroutineScope) {
                         .setValue("").await()
                     watchPlayers()
                     watchScreen()
+                    ref.child("turn").addValueEventListener(object: ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val v = snapshot.value
+                            if (v!=null && v is String) {
+                                mutableTurn.value = v
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                 } else {
                     mutableScreenName.value = ScreenName.Error("Invalid gameId")
                 }
@@ -168,6 +186,18 @@ class GameManager(private val scope:CoroutineScope) {
         scope.launch {
             try {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                ref.child("turn").addValueEventListener(object: ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val v = snapshot.value
+                        if (v!=null && v is String) {
+                            mutableTurn.value = v
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+                ref.child("turn").setValue(teamNames[0]).await()
                 ref.child("screen").setValue("Playing").await()
                 mutableScreenName.value = ScreenName.Dashboard
                 Log.d("GameManager", "Game started")
@@ -177,5 +207,20 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
+    fun nextTurn(){
+        scope.launch {
+            try{
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                var v = turn.value
+                if (v is String){
+                    var index = teamNames.indexOf(v)
+                    index = (index + 1) % teamNames.size
+                    ref.child("turn").setValue(teamNames[index]).await()
+                }
+            }catch (e:Exception){
+
+            }
+        }
+    }
 
 }
