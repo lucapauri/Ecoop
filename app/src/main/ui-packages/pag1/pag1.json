@@ -1,0 +1,243 @@
+{
+  "name": "pag1",
+  "version": 32,
+  "source-key": {
+    "type": "figma",
+    "file": "w8lnpfAlPyvRDXLFy7AD5I",
+    "node": "45:281",
+    "version": "3400957058",
+    "component-id": "9fe7a1ad91b43a6b53f5e243c1534a9ccf836fcc"
+  },
+  "default": "Pag1",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "text",
+        "id": "Text"
+      },
+      {
+        "type": "vector",
+        "id": "Rectangle 49"
+      },
+      {
+        "type": "text",
+        "id": "Registrati"
+      },
+      {
+        "type": "image",
+        "id": "Logo"
+      }
+    ],
+    "modes": {
+      "Pag1": {
+        "rules": [
+          {
+            "id": "top_level",
+            "is-structured": "false",
+            "children": [
+              "Text",
+              "Rectangle 49",
+              "Registrati",
+              "Logo"
+            ],
+            "background-color": {
+              "alpha": "1.0",
+              "hue": "137.34939759036143",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            }
+          },
+          {
+            "id": "Text",
+            "margin": {
+              "left": "40.0",
+              "top": "339.0",
+              "right": "41.0",
+              "bottom": "171.0"
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              }
+            },
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "1.0"
+            },
+            "annotated-text-content": {
+              "text": "Rendi il tuo\n\n\nQUARTIERE\n\nun posto migliore\n\nImpegnati con la tua squadra a diminuire le emissioni di CO2 e aumentare il benessere della comunità!",
+              "annotated-text-span-list": [
+                {
+                  "span-start": "0",
+                  "span-length": "13",
+                  "annotated-text-style": {
+                    "text-size": "24.0"
+                  }
+                },
+                {
+                  "span-start": "13",
+                  "span-length": "2"
+                },
+                {
+                  "span-start": "15",
+                  "span-length": "10",
+                  "annotated-text-style": {
+                    "font-weight": "700.0",
+                    "text-size": "32.0",
+                    "typeface": "Inter"
+                  }
+                },
+                {
+                  "span-start": "25",
+                  "span-length": "1",
+                  "annotated-text-style": {
+                    "font-weight": "700.0",
+                    "text-size": "10.0",
+                    "typeface": "Inter"
+                  }
+                },
+                {
+                  "span-start": "26",
+                  "span-length": "18",
+                  "annotated-text-style": {
+                    "font-weight": "600.0",
+                    "text-size": "31.0",
+                    "typeface": "Inter"
+                  }
+                },
+                {
+                  "span-start": "44",
+                  "span-length": "1"
+                },
+                {
+                  "span-start": "45",
+                  "span-length": "100",
+                  "annotated-text-style": {
+                    "font-weight": "400.0",
+                    "text-size": "20.0",
+                    "typeface": "Inter"
+                  }
+                },
+                {
+                  "span-start": "145",
+                  "span-length": "1",
+                  "annotated-text-style": {
+                    "font-weight": "400.0",
+                    "text-size": "20.0",
+                    "typeface": "Inter"
+                  }
+                }
+              ]
+            },
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-align": "left",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Rectangle 49",
+            "margin": {
+              "left": "47.0",
+              "top": "662.0",
+              "right": "48.0",
+              "bottom": "92.0"
+            },
+            "border-radius": "100.0",
+            "tap-handler": "$Tasto",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              }
+            },
+            "vector-content": "rectangle_49.svg"
+          },
+          {
+            "id": "Registrati",
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": "-0.5"
+              },
+              "vertical": {
+                "attachment": "center",
+                "offset": "285.0"
+              }
+            },
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "137.34939759036143",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            },
+            "text-content": "Registrati",
+            "overflow": "visible",
+            "text-size": "20.0",
+            "line-height": "1.2102272033691406",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Logo",
+            "margin": {
+              "left": "1.0",
+              "top": "77.0",
+              "right": "2.0",
+              "bottom": "547.0"
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              }
+            },
+            "image-content": "logo.png",
+            "scale": "cover"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "Tasto": {
+      "data-type": "void-callback",
+      "required": false,
+      "description": "tasto_registrati"
+    }
+  },
+  "previews": [
+    {
+      "design": "Pag1",
+      "size": {
+        "width": 375.0,
+        "height": 812.0
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
