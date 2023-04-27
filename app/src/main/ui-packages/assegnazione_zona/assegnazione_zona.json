@@ -1,0 +1,372 @@
+{
+  "name": "assegnazione_zona",
+  "version": 32,
+  "source-key": {
+    "type": "figma",
+    "file": "w8lnpfAlPyvRDXLFy7AD5I",
+    "node": "44:172",
+    "version": "3407036686",
+    "component-id": "37012f7d7cffa1cf35431f9dc15ca5c2b264f820"
+  },
+  "default": "Assegnazione zona",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "Popup"
+      },
+      {
+        "type": "vector",
+        "id": "BG"
+      },
+      {
+        "type": "group",
+        "id": "Button/Primary"
+      },
+      {
+        "type": "text",
+        "id": "Regolamento"
+      },
+      {
+        "type": "group",
+        "id": "Text"
+      },
+      {
+        "type": "text",
+        "id": "Click Me"
+      },
+      {
+        "type": "text",
+        "id": "Benvenuto!"
+      },
+      {
+        "type": "text",
+        "id": "Zona"
+      },
+      {
+        "type": "text",
+        "id": "Description"
+      }
+    ],
+    "modes": {
+      "Assegnazione zona": {
+        "rules": [
+          {
+            "id": "top_level",
+            "is-structured": "false",
+            "children": [
+              "Popup"
+            ],
+            "background-color": {
+              "alpha": "1.0",
+              "hue": "136.6265060240964",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            }
+          },
+          {
+            "id": "Popup",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "16.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "224.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "343.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "363.0"
+              }
+            },
+            "is-structured": "false",
+            "children": [
+              "BG",
+              "Button/Primary",
+              "Regolamento",
+              "Text"
+            ],
+            "clip-content": "false"
+          },
+          {
+            "id": "BG",
+            "border-radius": "8.0",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "343.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "363.0"
+              }
+            },
+            "vector-content": "bg.svg"
+          },
+          {
+            "id": "Button/Primary",
+            "padding": {
+              "left": "32.0",
+              "top": "16.0",
+              "right": "32.0",
+              "bottom": "16.0"
+            },
+            "border-radius": "100.0",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "16.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "243.0"
+              }
+            },
+            "tap-handler": "$tasto_inizia",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "311.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "children": [
+              "Click Me"
+            ],
+            "item-spacing": "12.0",
+            "background-color": {
+              "alpha": "1.0",
+              "hue": "136.6265060240964",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            },
+            "clip-content": "false"
+          },
+          {
+            "id": "Regolamento",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "16.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "312.0"
+              }
+            },
+            "tap-handler": "$tasto_regolamento",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "311.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "136.6265060240964",
+              "saturation": "0.4715909090909091",
+              "value": "0.6901960784313725"
+            },
+            "text-content": "Regolamento",
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Text",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "16.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "32.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "312.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "181.0"
+              }
+            },
+            "is-structured": "false",
+            "children": [
+              "Benvenuto!",
+              "Zona",
+              "Description"
+            ],
+            "clip-content": "false"
+          },
+          {
+            "id": "Click Me",
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "1.0"
+            },
+            "text-content": "Inizia",
+            "overflow": "visible",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Benvenuto!",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "74.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "0.0"
+              }
+            },
+            "font-weight": "600.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "0.0"
+            },
+            "text-content": "Benvenuto!",
+            "overflow": "visible",
+            "text-size": "30.0",
+            "line-height": "1.2102272033691406",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Zona",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "0.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "59.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "311.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": "500.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "0.4"
+            },
+            "text-content": "$Text",
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          },
+          {
+            "id": "Description",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": "1.0"
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": "86.0"
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "311.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": "500.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "0.4"
+            },
+            "text-content": "\n\nImpegnati con la tua squadra a diminuire le emissioni di CO2 e aumentare il benessere della comunità!",
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-size": "16.0",
+            "line-height": "1.2102272510528564",
+            "typeface": "Inter"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "tasto_inizia": {
+      "data-type": "void-callback",
+      "required": false,
+      "description": ""
+    },
+    "tasto_regolamento": {
+      "data-type": "void-callback",
+      "required": false,
+      "description": ""
+    },
+    "Text": {
+      "data-type": "text",
+      "required": false,
+      "description": ""
+    }
+  },
+  "previews": [
+    {
+      "design": "Assegnazione zona",
+      "size": {
+        "width": 375.0,
+        "height": 812.0
+      },
+      "parameters": {
+        "Text": "Sei stato assegnato al quartiere ROSSO/BLU/GIALLO/VIOLA."
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
