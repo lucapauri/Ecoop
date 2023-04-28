@@ -16,7 +16,7 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Grey,
     primaryVariant = Grey3,
-    secondary = Green,
+    secondary = Teal200,
 
 
     background = com.example.greenapplication.ui.theme.Green,

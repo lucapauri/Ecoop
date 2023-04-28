@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +36,8 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             Image (
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "logo",
-                modifier = Modifier.align(Alignment.CenterHorizontally).size(300.dp)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.align(Alignment.CenterHorizontally).size(300.dp).fillMaxWidth(1.0f).fillMaxHeight(1.0f)
             )
             Spacer(Modifier.height(32.dp))
             androidx.compose.material.Text(
