@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
@@ -26,13 +27,14 @@ fun GenericScreen(
         .fillMaxSize()
         .then(modifier)
     ) {padding ->
-        Column(Modifier.padding(padding)) {
+        Column(Modifier.padding(vertical = 15.dp)) {
             Text(
                 title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.secondary),
-                style = MaterialTheme.typography.h3,
+                    .background(MaterialTheme.colors.background),
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.surface,
                 textAlign = TextAlign.Center
             )
             content()

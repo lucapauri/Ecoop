@@ -9,8 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.greenapplication.pag1.Pag1
-import com.example.greenapplication.pag2registrati.Pag2Registrati
+import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Pag1()
+                    GenericScreen(title = "Generic Screen")
                 }
             }
         }
@@ -34,8 +33,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PreviewFrame() {
     GameSkeletonTheme {
-
-        Pag1()
+        GenericScreen(title = "Generic Screen")
     }
 
 }

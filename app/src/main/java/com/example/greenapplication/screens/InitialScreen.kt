@@ -1,10 +1,7 @@
 package it.polito.did.gameskeleton.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +25,8 @@ fun InitialScreen(onStartNewGame: () -> Unit,
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 onClick = onStartNewGame ) {
-                Text("Start new match")
+                Text("Start new match",
+                color = MaterialTheme.colors.background)
             }
             Spacer(Modifier.height(32.dp))
             Row {
