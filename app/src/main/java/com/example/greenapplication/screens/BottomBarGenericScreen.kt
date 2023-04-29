@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +52,7 @@ fun BottomBar() {
             })
 
         BottomNavigationItem(icon = {
-            Icon(imageVector = Icons.Default.Add, "", modifier = Modifier.size(30.dp))
+            Icon(imageVector = Icons.Default.ShoppingCart, "", modifier = Modifier.size(30.dp))
         },
 
             selected = (selectedIndex.value == 1),
@@ -73,26 +74,30 @@ fun BottomBar() {
 fun MapScreen(modifier: Modifier = Modifier) {
 
         Scaffold(
-            bottomBar = {BottomBar() }
-        ) {
-            //content area
 
-            Box(modifier = Modifier
-                .background(MaterialTheme.colors.surface)
-                .fillMaxSize())
+            bottomBar = {BottomBar() }
+
+        )
+        {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colors.surface)
+                    .fillMaxSize()
+            )
         }
+
 }
 
 @Composable
 fun SingleCard(res: Int, content: String ) {
     Card(
         modifier = Modifier
-            .padding(3.dp)
+            .padding(5.dp)
             .clickable { },
         elevation = 10.dp
     ) {
         Column(
-            modifier = Modifier.padding(15.dp)
+            modifier = Modifier.padding(5.dp)
         ) {
             Image(
                 painter = painterResource(res),
@@ -103,7 +108,7 @@ fun SingleCard(res: Int, content: String ) {
 }
 @Composable
 fun CardDemo() {
-  Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.SpaceAround
+  Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.Center
   ) {
       Row(modifier = Modifier
           .fillMaxWidth()
@@ -111,64 +116,67 @@ fun CardDemo() {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-        Card(
-          modifier = Modifier
-              .padding(3.dp)
-              .clickable { },
-          elevation = 10.dp
-        ) {
-          Column(
-              modifier = Modifier.padding(15.dp)
-          ) {
-              Image(
-                  painter = painterResource(com.example.greenapplication.R.drawable.logo),
-                  contentDescription = "logo"
-              )
-          }
-         }
-         Card(
-          modifier = Modifier
-              .padding(3.dp)
-              .clickable { },
-          elevation = 10.dp
-        ) {
-          Column(
-              modifier = Modifier.padding(15.dp)
-          ) {
-              Image(
-                  painter = painterResource(com.example.greenapplication.R.drawable.logo),
-                  contentDescription = "logo"
-              )
-          }
-        }
-          Card(
-              modifier = Modifier
-                  .padding(3.dp)
-                  .clickable { },
-              elevation = 10.dp
-          ) {
-              Column(
-                  modifier = Modifier.padding(15.dp)
-              ) {
-                  Image(
-                      painter = painterResource(com.example.greenapplication.R.drawable.logo),
-                      contentDescription = "logo"
-                  )
-              }
-          }
-
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
     }
-      SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+      Row(modifier = Modifier
+          .fillMaxWidth()
+          .height(120.dp),
+          verticalAlignment = Alignment.Top,
+          horizontalArrangement  =  Arrangement.SpaceBetween
+      ){
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+      }
+      Row(modifier = Modifier
+          .fillMaxWidth()
+          .height(120.dp),
+          verticalAlignment = Alignment.Top,
+          horizontalArrangement  =  Arrangement.SpaceBetween
+      ){
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+      }
+      Row(modifier = Modifier
+          .fillMaxWidth()
+          .height(120.dp),
+          verticalAlignment = Alignment.Top,
+          horizontalArrangement  =  Arrangement.SpaceBetween
+      ){
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+      }
+
+
   }
 }
 
+@Composable
+fun GridScreen(){
+    Column(modifier = Modifier, verticalArrangement = Arrangement.Center
+    ){
+        Box( //Sostitire BOX con quello che manca
+            modifier = Modifier
+                .background(MaterialTheme.colors.surface)
+                .height(220.dp)
+                .fillMaxWidth()
+        )
+        CardDemo()
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapScreen() {
     GameSkeletonTheme {
+
         MapScreen()
-        CardDemo()
+        //CardDemo()
+        GridScreen()
     }
 
 }
