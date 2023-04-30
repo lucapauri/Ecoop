@@ -24,9 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -40,12 +38,19 @@ import androidx.compose.ui.unit.dp
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
-val data = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
 
 @Composable
-fun BottomBar() {
-    val selectedIndex = remember { mutableStateOf(0) }
-    BottomNavigation(elevation = 10.dp, backgroundColor = MaterialTheme.colors.background) {
+fun BottomBar(SelectedIcon: Int) {
+    val selectedIndex = remember { mutableStateOf(SelectedIcon) }
+    BottomNavigation(backgroundColor = Color(0xD9FFFFFF).compositeOver(Color.White),
+        modifier = Modifier
+            .graphicsLayer {
+                clip = true
+                shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                shadowElevation = 2.2f
+            }
+            .height(90.dp).fillMaxWidth(),
+        elevation = 5.dp) {
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Home,"", modifier = Modifier.size(30.dp))
@@ -76,11 +81,11 @@ fun BottomBar() {
 }
 
 @Composable
-fun MapScreen(modifier: Modifier = Modifier) {
+fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
 
         Scaffold(
 
-            bottomBar = {BottomBar() }
+            bottomBar = {BottomBar(SelectedIcon) }
 
         )
         {
@@ -181,7 +186,7 @@ fun GridScreen(team: String){
 fun PreviewMapScreen() {
     GameSkeletonTheme {
 
-        MapScreen()
+        MapScreen(SelectedIcon = 0)
         //CardDemo()
         GridScreen(team = "Quartiere Rosso")
     }

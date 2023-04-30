@@ -21,6 +21,8 @@ private val LightColorPalette = lightColors(
 
     background = com.example.greenapplication.ui.theme.Green,
     surface = com.example.greenapplication.ui.theme.Grey,
+    onBackground = com.example.greenapplication.ui.theme.Grey2
+
     /*onPrimary = Green,
     onSecondary = Color.Black,
     onBackground = com.example.greenapplication.ui.theme.Grey2,

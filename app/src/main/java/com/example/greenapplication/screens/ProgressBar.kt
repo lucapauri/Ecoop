@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
@@ -14,6 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun CustomProgressBar(
@@ -30,11 +33,19 @@ fun CustomProgressBar(
                 .background(foregroundColor)
                 .width(width * percent / 100)
         )
+        //if (isShownText) Text("${percent} %", modifier = Modifier.align(alignment = Alignment.Center), fontSize = 12.sp, color = MaterialTheme.colors.surface)
     }
 }
 
 @Composable
 fun IconBar(percentCO2: Int, percentHealth: Int){
+    Spacer(Modifier.height(20.dp))
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
+        Icon(imageVector = Icons.Default.Star,"", modifier = Modifier.size(30.dp))
+        Spacer(Modifier.width(10.dp))
+        Text(text = "25")
+    }
+
     Spacer(Modifier.height(20.dp))
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 
@@ -44,7 +55,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int){
             Modifier
                 .clip(shape = RoundedCornerShape(100))
                 .height(15.dp),
-            width = 310.dp,
+            width = 300.dp,
             Color.LightGray,
             Brush.horizontalGradient(
                 listOf(
@@ -54,7 +65,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int){
                 )
             ),
             percentHealth,
-            true
+            true,
         )
     }
     Spacer(Modifier.height(20.dp))
@@ -66,7 +77,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int){
             Modifier
                 .clip(shape = RoundedCornerShape(100))
                 .height(15.dp),
-            width = 310.dp,
+            width = 300.dp,
             Color.LightGray,
             Brush.horizontalGradient(
                 listOf(
@@ -79,4 +90,5 @@ fun IconBar(percentCO2: Int, percentHealth: Int){
             true
         )
     }
+    Spacer(Modifier.height(20.dp))
 }
