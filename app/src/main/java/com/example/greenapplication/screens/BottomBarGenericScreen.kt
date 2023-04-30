@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.R
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -29,10 +32,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 val data = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
@@ -156,15 +161,17 @@ fun CardDemo() {
 }
 
 @Composable
-fun GridScreen(){
-    Column(modifier = Modifier, verticalArrangement = Arrangement.Center
+fun GridScreen(team: String){
+    Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Box( //Sostitire BOX con quello che manca
+        Text ( team,
             modifier = Modifier
-                .background(MaterialTheme.colors.surface)
-                .height(220.dp)
                 .fillMaxWidth()
-        )
+                .background(MaterialTheme.colors.background),
+            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colors.surface,
+            textAlign = TextAlign.Center)
+        IconBar(percentCO2 = 65, percentHealth = 70)
         CardDemo()
     }
 }
@@ -176,7 +183,7 @@ fun PreviewMapScreen() {
 
         MapScreen()
         //CardDemo()
-        GridScreen()
+        GridScreen(team = "Quartiere Rosso")
     }
 
 }
