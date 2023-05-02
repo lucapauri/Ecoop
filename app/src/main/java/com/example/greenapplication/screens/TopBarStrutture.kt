@@ -88,7 +88,7 @@ fun TopBarShop(SelectedIcon: Int){
         .background(color = MaterialTheme.colors.surface)
         .size(95.dp))
     {
-        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(15.dp)){
+        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(14.dp)){
             val selectedIcon = remember { mutableStateOf(SelectedIcon) }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally){
