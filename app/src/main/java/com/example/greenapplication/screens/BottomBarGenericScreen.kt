@@ -23,9 +23,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -49,7 +52,8 @@ fun BottomBar(SelectedIcon: Int) {
                 shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
                 shadowElevation = 2.2f
             }
-            .height(90.dp).fillMaxWidth(),
+            .height(90.dp)
+            .fillMaxWidth(),
         elevation = 5.dp) {
 
         BottomNavigationItem(icon = {
@@ -91,9 +95,17 @@ fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
         {
             Box(
                 modifier = Modifier
-                    .background(MaterialTheme.colors.surface)
-                    .fillMaxSize()
-            )
+                    .background(color = MaterialTheme.colors.surface)
+                    .fillMaxSize()){
+                Image(
+                    painterResource(id =com.example.greenapplication.R.drawable.sfondo2),
+                    contentDescription = "Sfondo",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize().blur (radiusX = 5.dp, radiusY = 5.dp)
+                    )
+
+            }
+
         }
 
 }
@@ -172,10 +184,16 @@ fun GridScreen(team: String){
         Text ( team,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background),
+                .background(Color(0xD9FFFFFF).compositeOver(Color.White))
+                .graphicsLayer {
+                    clip = true
+                    shape = RoundedCornerShape(bottomStart =  30.dp, bottomEnd = 30.dp)
+                    shadowElevation = 2.2f
+                },
             style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.surface,
+            color = MaterialTheme.colors.background,
             textAlign = TextAlign.Center)
+        Spacer(Modifier.height(20.dp))
         IconBar(percentCO2 = 65, percentHealth = 70)
         CardDemo()
     }

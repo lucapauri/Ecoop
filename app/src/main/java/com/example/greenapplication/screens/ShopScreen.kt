@@ -96,7 +96,7 @@ class ShopScreen : ComponentActivity () {
                 Text(
                     modifier = Modifier.padding(top = 6.dp, start = 6.dp, end = 6.dp),
                     text = testData.text,
-                    fontSize = 15.sp,
+                    fontSize = 18.sp,
                     color = MaterialTheme.colors.onBackground
                 )
             }
@@ -111,12 +111,12 @@ class ShopScreen : ComponentActivity () {
         val list = createDataList()
         Column() {
 
-            TopBarStrutture(SelectedIcon = 1)
+
             Spacer(modifier = Modifier.height(20.dp))
 
             LazyVerticalGrid(
                 cells = GridCells.Fixed(3),
-                contentPadding = PaddingValues(horizontal = 5.dp, vertical = 16.dp),
+                contentPadding = PaddingValues(horizontal = 5.dp, vertical = 66.dp),
                 content = {
                     items(list.size) { index ->
 
@@ -174,12 +174,13 @@ class ShopScreen : ComponentActivity () {
         return list
     }
 
+
     @Preview(showBackground = true)
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-            TopBarStrutture(SelectedIcon = 1)
             MapScreen(SelectedIcon = 1)
+            TopBarShop(SelectedIcon = 0)
            ContentView()
         }
     }
