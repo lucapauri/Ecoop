@@ -31,53 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
-@Composable
-fun TopBarStrutture(SelectedIcon: Int) {
-    
-    val contextForToast = LocalContext.current.applicationContext
-
-    TopAppBar( modifier = Modifier
-        .height(90.dp)
-        .fillMaxWidth(),
-        elevation = 5.dp,
-        title = {
-            Text(text = "")
-        },
-        backgroundColor = MaterialTheme.colors.surface,
-        actions = {
-            // search icon
-            TopAppBarActionButton(
-                imageVector = Icons.Outlined.Search,
-                description = "Search"
-            ) {
-                Toast.makeText(contextForToast, "Search Click", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-            // lock icon
-            TopAppBarActionButton(
-                imageVector = Icons.Outlined.Lock,
-                description = "Lock"
-            ) {
-                Toast.makeText(contextForToast, "Lock Click", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    )
-}
-
-@Composable
-fun TopAppBarActionButton(
-    imageVector: ImageVector,
-    description: String,
-    onClick: () -> Unit
-) {
-    IconButton(onClick = {
-        onClick()
-    }) {
-        Icon(imageVector = imageVector, contentDescription = description)
-    }
-}
 
 @Composable
 fun TopBarShop(SelectedIcon: Int){
@@ -88,7 +41,7 @@ fun TopBarShop(SelectedIcon: Int){
         .background(color = MaterialTheme.colors.surface)
         .size(95.dp))
     {
-        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(14.dp)){
+        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(bottom = 15.dp, top = 10.dp, start = 15.dp)){
             val selectedIcon = remember { mutableStateOf(SelectedIcon) }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally){
@@ -99,6 +52,7 @@ fun TopBarShop(SelectedIcon: Int){
                         tint = Color(0xff2C4BD7)
                     )
                 }
+                Spacer(Modifier.height(3.dp))
                 Text(text = "Livello 1", color = MaterialTheme.colors.onBackground)
 
             }
@@ -107,8 +61,11 @@ fun TopBarShop(SelectedIcon: Int){
             Button(onClick = { Toast.makeText(contextForToast, "Clicked on Button", Toast.LENGTH_SHORT).show() },
                 modifier = Modifier.shadow(8.dp),
                 enabled = (SelectedIcon > 1 )) {
-                    Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp), tint = MaterialTheme.colors.background)
+                    Icon(imageVector = Icons.Default.Star,"Livello 1",
+                        modifier = Modifier.size(30.dp),
+                        tint = Color(0xffe4b90b))
                 }
+                Spacer(Modifier.height(3.dp))
                 Text(text = "Livello 2", color = MaterialTheme.colors.onBackground)
             }
 
@@ -116,8 +73,10 @@ fun TopBarShop(SelectedIcon: Int){
             Button(onClick = { Toast.makeText(contextForToast, "Clicked on Button", Toast.LENGTH_SHORT).show() },
                 modifier = Modifier.shadow(8.dp),
                 enabled= (SelectedIcon > 2 )) {
-                    Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp), tint = MaterialTheme.colors.background)
+                    Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp),
+                        tint = Color(0xff66ae27))
                 }
+                Spacer(Modifier.height(3.dp))
                 Text(text = "Livello 3", color = MaterialTheme.colors.onBackground)
             }
         }
@@ -129,7 +88,7 @@ fun TopBarShop(SelectedIcon: Int){
 @Composable
 fun PreviewTopBar(){
     GameSkeletonTheme() {
-        TopBarShop(SelectedIcon = 1)
+        TopBarShop(SelectedIcon = 3)
         ContentView()
     }
 }

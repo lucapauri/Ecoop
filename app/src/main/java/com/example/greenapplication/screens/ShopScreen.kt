@@ -37,7 +37,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
-private data class TestData(
+public data class TestData(
     val text: String,
     val res: Int,
     val content: String
@@ -54,8 +54,8 @@ class ShopScreen : ComponentActivity () {
 
 
     @Composable
-    private fun ContentView() {
-        ShopScreenExample()
+    private fun ContentView(Level: Int) {
+        ShopScreenExample(Level)
     }
 
 
@@ -107,12 +107,13 @@ class ShopScreen : ComponentActivity () {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun ShopScreenExample() {
+    fun ShopScreenExample(Level: Int) {
+
         val list = createDataList()
+
         Column() {
 
-
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
             LazyVerticalGrid(
                 cells = GridCells.Fixed(3),
@@ -129,7 +130,7 @@ class ShopScreen : ComponentActivity () {
         }
     }
 
-    private fun createDataList(): List<TestData> {
+    public fun createDataList(): List<TestData> {
 
         val list = mutableListOf<TestData>()
 
@@ -138,7 +139,6 @@ class ShopScreen : ComponentActivity () {
                 "Centrale a gas",
                 res = com.example.greenapplication.R.drawable.centralegas,
                 content = "gas"
-
             )
         )
         list.add(
@@ -174,6 +174,96 @@ class ShopScreen : ComponentActivity () {
         return list
     }
 
+    private fun createDataListGiallo(): List<TestData> {
+
+        val list = mutableListOf<TestData>()
+
+        list.add(
+            TestData(
+                "Metro",
+                res = com.example.greenapplication.R.drawable.metro,
+                content = "Metro"
+
+            )
+        )
+        list.add(
+            TestData(
+                "Area verde",
+                res = com.example.greenapplication.R.drawable.areaverde,
+                content = "Area verde"
+            )
+        )
+        list.add(
+            TestData(
+                "Centrale Nucleare",
+                res = com.example.greenapplication.R.drawable.nucleare,
+                content = "Centrale Nucleare"
+            )
+        )
+        list.add(
+            TestData(
+                "Centrale idroelettrica",
+                res = com.example.greenapplication.R.drawable.idroelettrica,
+                content = "Centrale idroelettrica"
+            )
+        )
+        list.add(
+            TestData(
+                "Centrale geotermica",
+                res = com.example.greenapplication.R.drawable.geotermica,
+                content = "Centrale geotermica"
+            )
+        )
+
+
+        return list
+    }
+
+    private fun createDataListVerde(): List<TestData> {
+
+        val list = mutableListOf<TestData>()
+
+        list.add(
+            TestData(
+                "Pista ciclabile",
+                res = com.example.greenapplication.R.drawable.ciclabile,
+                content = "ciclabile"
+
+            )
+        )
+        list.add(
+            TestData(
+                "Orto cittadino",
+                res = com.example.greenapplication.R.drawable.orto,
+                content = "orto"
+            )
+        )
+        list.add(
+            TestData(
+                "Colonnine auto elettriche",
+                res = com.example.greenapplication.R.drawable.colonnine,
+                content = "auto elettriche"
+            )
+        )
+        list.add(
+            TestData(
+                "Centrale fotovoltaica",
+                res = com.example.greenapplication.R.drawable.fotovoltaica,
+                content = "fotovoltaica"
+            )
+        )
+        list.add(
+            TestData(
+                "Centrale eolica",
+                res = com.example.greenapplication.R.drawable.eolica,
+                content = "Centrale eolica"
+            )
+        )
+
+
+        return list
+    }
+
 
     @Preview(showBackground = true)
     @Composable
@@ -181,7 +271,7 @@ class ShopScreen : ComponentActivity () {
         GameSkeletonTheme {
             MapScreen(SelectedIcon = 1)
             TopBarShop(SelectedIcon = 0)
-           ContentView()
+           ContentView(1)
         }
     }
 }

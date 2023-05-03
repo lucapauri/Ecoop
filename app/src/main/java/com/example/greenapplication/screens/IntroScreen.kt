@@ -42,7 +42,7 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             Spacer(Modifier.height(32.dp))
             androidx.compose.material.Text(
                 text = "Rendi il tuo",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.surface,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.padding(horizontal = 50.dp)
@@ -50,7 +50,7 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             Spacer(Modifier.height(32.dp))
             androidx.compose.material.Text(
                 text = "QUARTIERE\nun posto migliore",
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.subtitle1,
                 color = MaterialTheme.colors.surface,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.padding(horizontal = 50.dp)
@@ -58,7 +58,7 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             Spacer(Modifier.height(22.dp))
             androidx.compose.material.Text(
                 text = "Impegnati con la tua squadra a diminuire le emissioni di CO2 e aumentare il benessere della comunità!",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.surface,
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(horizontal = 50.dp)
