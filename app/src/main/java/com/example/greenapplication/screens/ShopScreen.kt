@@ -16,20 +16,24 @@ import androidx.compose.foundation.lazy.GridItemSpan
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +43,8 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 public data class TestData(
     val text: String,
+    //val description: String,
+   // val icon: ImageVector,
     val res: Int,
     val content: String
 )
@@ -54,8 +60,8 @@ class ShopScreen : ComponentActivity () {
 
 
     @Composable
-    private fun ContentView(Level: Int) {
-        ShopScreenExample(Level)
+    private fun ContentView(Lista: List<TestData>) {
+        ShopScreenExample(Lista)
     }
 
 
@@ -107,17 +113,19 @@ class ShopScreen : ComponentActivity () {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun ShopScreenExample(Level: Int) {
+    fun ShopScreenExample( Lista: List<TestData>) {
 
-        val list = createDataList()
+
+        val list = Lista
 
         Column() {
 
-            Spacer(modifier = Modifier.height(35.dp))
+            //Spacer(modifier = Modifier.height(35.dp))
 
             LazyVerticalGrid(
                 cells = GridCells.Fixed(3),
-                contentPadding = PaddingValues(horizontal = 5.dp, vertical = 66.dp),
+                contentPadding = PaddingValues(start = 5.dp, end = 5.dp, top = 242.dp, bottom = 20.dp),
+                //modifier = Modifier.background(MaterialTheme.colors.surface),
                 content = {
                     items(list.size) { index ->
 
@@ -137,6 +145,7 @@ class ShopScreen : ComponentActivity () {
         list.add(
             TestData(
                 "Centrale a gas",
+                //description = "50",
                 res = com.example.greenapplication.R.drawable.centralegas,
                 content = "gas"
             )
@@ -263,15 +272,44 @@ class ShopScreen : ComponentActivity () {
 
         return list
     }
+    
+    
+
 
 
     @Preview(showBackground = true)
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-            MapScreen(SelectedIcon = 1)
-            TopBarShop(SelectedIcon = 0)
-           ContentView(1)
+
+
+            MapScreen(SelectedIcon = 1) // 0 -> selezionato tasto Home, 1 -> selezionato carrello, 2 -> selezionata campana
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Text ( text = "Quartiere Rosso",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xD9FFFFFF).compositeOver(Color.White))
+                        .graphicsLayer {
+                            clip = true
+                            shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
+                            shadowElevation = 2.2f
+                        },
+                    style = MaterialTheme.typography.subtitle1,
+                    color = MaterialTheme.colors.background,
+                    textAlign = TextAlign.Center)
+
+                Spacer(Modifier.height(20.dp))
+
+                IconBar(percentCO2 = 65, percentHealth = 70)
+                Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
+                TopBarShop(SelectedIcon = 0) // 0 -> 2 livelli bloccati, 1 -> 1 livello bloccato, 3 -> tutti i livello sbloccati
+            }
+
+            ContentView(Lista = createDataList()) //permette di passare una lista diversa a seconda del livello (blu, giallo, verde)
+
+
         }
     }
 }

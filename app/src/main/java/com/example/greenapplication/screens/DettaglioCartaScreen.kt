@@ -75,7 +75,6 @@ fun DettaglioCarta() {
 fun PreviewShopScreen() {
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 1)
-        TopBarShop(SelectedIcon = 0)
         Spacer(Modifier.height(30.dp))
         DettaglioCarta()
     }

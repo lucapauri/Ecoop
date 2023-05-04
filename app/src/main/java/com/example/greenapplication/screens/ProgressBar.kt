@@ -50,7 +50,8 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Icon(imageVector = Icons.Default.Face, "", modifier = Modifier.size(30.dp))
+                Icon(imageVector = Icons.Default.Face, "", modifier = Modifier.size(30.dp),
+                tint = Color.DarkGray)
                 Spacer(Modifier.width(10.dp))
                 CustomProgressBar(
                     Modifier
@@ -76,7 +77,8 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Icon(imageVector = Icons.Default.Warning, "", modifier = Modifier.size(30.dp))
+                Icon(imageVector = Icons.Default.Warning, "", modifier = Modifier.size(30.dp),
+                    tint = Color.DarkGray)
                 Spacer(Modifier.width(10.dp))
                 CustomProgressBar(
                     Modifier
@@ -102,7 +104,8 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
             modifier = Modifier.padding(top = 15.dp, start = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = Icons.Default.Star, "", modifier = Modifier.size(30.dp))
+            Icon(imageVector = Icons.Default.Star, "", modifier = Modifier.size(30.dp),
+                tint = Color.DarkGray)
             Spacer(Modifier.width(10.dp))
             Text(text = "25")
         }

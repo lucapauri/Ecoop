@@ -39,9 +39,9 @@ fun TopBarShop(SelectedIcon: Int){
     Box(modifier = Modifier
         .fillMaxWidth()
         .background(color = MaterialTheme.colors.surface)
-        .size(95.dp))
+        .size(100.dp))
     {
-        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(bottom = 15.dp, top = 10.dp, start = 15.dp)){
+        Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(bottom = 11.dp, top = 15.dp, start = 15.dp)){
             val selectedIcon = remember { mutableStateOf(SelectedIcon) }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally){
@@ -82,6 +82,8 @@ fun TopBarShop(SelectedIcon: Int){
         }
     }
 }
+
+
 
 
 @Preview

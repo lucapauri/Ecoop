@@ -101,7 +101,9 @@ fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
                     painterResource(id =com.example.greenapplication.R.drawable.sfondo2),
                     contentDescription = "Sfondo",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize().blur (radiusX = 5.dp, radiusY = 5.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(radiusX = 5.dp, radiusY = 5.dp)
                     )
 
             }
@@ -187,7 +189,7 @@ fun GridScreen(team: String){
                 .background(Color(0xD9FFFFFF).compositeOver(Color.White))
                 .graphicsLayer {
                     clip = true
-                    shape = RoundedCornerShape(bottomStart =  30.dp, bottomEnd = 30.dp)
+                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                     shadowElevation = 2.2f
                 },
             style = MaterialTheme.typography.subtitle1,
@@ -195,6 +197,7 @@ fun GridScreen(team: String){
             textAlign = TextAlign.Center)
         Spacer(Modifier.height(20.dp))
         IconBar(percentCO2 = 65, percentHealth = 70)
+        Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         CardDemo()
     }
 }
@@ -207,6 +210,8 @@ fun PreviewMapScreen() {
         MapScreen(SelectedIcon = 0)
         //CardDemo()
         GridScreen(team = "Quartiere Rosso")
+
+
     }
 
 }
