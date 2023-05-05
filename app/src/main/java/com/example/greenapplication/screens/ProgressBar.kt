@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.greenapplication.R
 
 @Composable
 fun CustomProgressBar(
@@ -50,7 +52,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Icon(imageVector = Icons.Default.Face, "", modifier = Modifier.size(30.dp),
+                Icon(painter = painterResource(id = R.drawable.life), "", modifier = Modifier.size(30.dp),
                 tint = Color.DarkGray)
                 Spacer(Modifier.width(10.dp))
                 CustomProgressBar(
@@ -71,13 +73,14 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
                 )
             }
 
+            Spacer(Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.padding(end = 15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Icon(imageVector = Icons.Default.Warning, "", modifier = Modifier.size(30.dp),
+                Icon(painter = painterResource(id = R.drawable.co2), "", modifier = Modifier.size(30.dp),
                     tint = Color.DarkGray)
                 Spacer(Modifier.width(10.dp))
                 CustomProgressBar(
@@ -104,7 +107,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
             modifier = Modifier.padding(top = 15.dp, start = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = Icons.Default.Star, "", modifier = Modifier.size(30.dp),
+            Icon(painter = painterResource(id = R.drawable.energy), "", modifier = Modifier.size(40.dp),
                 tint = Color.DarkGray)
             Spacer(Modifier.width(10.dp))
             Text(text = "25")

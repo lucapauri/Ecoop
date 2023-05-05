@@ -1,12 +1,15 @@
 package com.example.greenapplication.screens
 
+import android.accounts.AuthenticatorDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -16,52 +19,115 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.greenapplication.R
+import com.google.relay.compose.BoxScopeInstanceImpl.align
+import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
+import kotlinx.coroutines.processNextEventInCurrentThread
 
 
-data class Struttura(val name: String, val energy: Int, val res: Int, val content: String)
+data class Struttura(val name: String, val energy: Int, val qualitylife: Int, val co2: Int,
+                     val res: Int, val content: String, val description: String)
 val students = listOf(
-    Struttura("Centrale a Gas", 125,
-        res = com.example.greenapplication.R.drawable.centralegas, content = "gas"),
+    Struttura("Centrale a Gas", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.centralegas, content = "gas",
+    description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
 
 )
-
+//.elementAt(0)
 
 
 
 @Composable
-fun DettaglioCarta() {
+fun DettaglioCarta(CardData: Struttura) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 140.dp, start = 15.dp, end = 15.dp)
+            .padding(top = 150.dp, start = 15.dp, end = 15.dp)
             .clickable { },
         elevation = 10.dp
     ) {
         Column(
-            modifier = Modifier.padding(65.dp)
+            modifier = Modifier.padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Image(
+                painterResource(id = CardData.res),
+                contentDescription = CardData.content,
+                modifier = Modifier
+                    .padding(horizontal = 40.dp)
+                    .size(250.dp)
+                    .clip(shape = RoundedCornerShape(6.dp)))
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = CardData.name,
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.onBackground,
+                modifier = Modifier
+                    .padding(start = 40.dp, end = 40.dp, bottom = 15.dp)
+            )
+            
+            Row(verticalAlignment = Alignment.CenterVertically){
+                
+                Icon(painter = painterResource(id = R.drawable.energy),
+                    contentDescription = "energy",
+                tint = Color.DarkGray,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .padding(end = 2.dp)
+                )
+                Text(text = CardData.energy.toString(),
+                    color = MaterialTheme.colors.onBackground,
+                style = MaterialTheme.typography.subtitle2)
+                Spacer(modifier = Modifier.width(15.dp))
+
+                Icon(painter = painterResource(id = R.drawable.life),
+                    contentDescription = "energy",
+                    tint = Color.DarkGray,
+                    modifier = Modifier
+                        //.padding(start = 35.dp, end = 5.dp)
+                        .size(33.dp)
+                        .padding(end = 2.dp)
+                )
+                Text(text = CardData.qualitylife.toString(),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.subtitle2)
+                Spacer(modifier = Modifier.width(18.dp))
+
+                Icon(painter = painterResource(id = R.drawable.co2),
+                    contentDescription = "energy",
+                    tint = Color.DarkGray,
+                    modifier = Modifier
+                        // .padding(start = 35.dp, end = 5.dp)
+                        .size(35.dp)
+                        .padding(end = 3.dp)
+                )
+                Text(text = CardData.co2.toString(),
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.subtitle2)
+
+            }
 
             Text(
-                buildAnnotatedString {
-                    append("welcome to ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.W900, color = Color(0xFF4552B8))
-                    ) {
-                        append("Jetpack Compose Playground")
-                    }
-                }
+                text = CardData.description,
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.onBackground,
+                modifier = Modifier.padding(top = 15.dp)
             )
-            Text(
-                buildAnnotatedString {
-                    append("Now you are in the ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.W900)) {
-                        append("Card")
-                    }
-                    append(" section")
-                }
-            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {}, shape = RoundedCornerShape(20.dp)
+            ) {
+                androidx.compose.material.Text("Acquista",
+                    style = MaterialTheme.typography.button,
+                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.padding(horizontal = 80.dp))
+            }
+
+            
         }
     }
 }
@@ -74,8 +140,11 @@ fun DettaglioCarta() {
 @Composable
 fun PreviewShopScreen() {
     GameSkeletonTheme {
-        MapScreen(SelectedIcon = 1)
-        Spacer(Modifier.height(30.dp))
-        DettaglioCarta()
+        Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}, 
+        ) {
+            GenericScreen(title = "Quartiere Rosso")
+            //Spacer(modifier = Modifier.height(100.dp))
+            DettaglioCarta(students.elementAt(0))
+        }
     }
 }

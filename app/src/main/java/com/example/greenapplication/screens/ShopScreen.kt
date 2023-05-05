@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 public data class TestData(
@@ -124,8 +125,8 @@ class ShopScreen : ComponentActivity () {
 
             LazyVerticalGrid(
                 cells = GridCells.Fixed(3),
-                contentPadding = PaddingValues(start = 5.dp, end = 5.dp, top = 242.dp, bottom = 20.dp),
-                //modifier = Modifier.background(MaterialTheme.colors.surface),
+                contentPadding = PaddingValues(start = 5.dp, end = 5.dp, top = 22.dp, bottom = 90.dp),
+                modifier = Modifier.background(MaterialTheme.colors.surface),
                 content = {
                     items(list.size) { index ->
 
@@ -282,33 +283,16 @@ class ShopScreen : ComponentActivity () {
     fun PreviewShopScreen() {
         GameSkeletonTheme {
 
+            Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
 
-            MapScreen(SelectedIcon = 1) // 0 -> selezionato tasto Home, 1 -> selezionato carrello, 2 -> selezionata campana
+                GenericScreen(title = "Quartiere Rosso")
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier = Modifier.height(150.dp))
+                    TopBarShop(SelectedIcon = 0) // 0 -> 2 livelli bloccati, 1 -> 1 livello bloccato, 3 -> tutti i livello sbloccati
+                    ContentView(Lista = createDataList()) //permette di passare una lista diversa a seconda del livello (blu, giallo, verde)
+                }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                Text ( text = "Quartiere Rosso",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xD9FFFFFF).compositeOver(Color.White))
-                        .graphicsLayer {
-                            clip = true
-                            shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-                            shadowElevation = 2.2f
-                        },
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.background,
-                    textAlign = TextAlign.Center)
-
-                Spacer(Modifier.height(20.dp))
-
-                IconBar(percentCO2 = 65, percentHealth = 70)
-                Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
-                TopBarShop(SelectedIcon = 0) // 0 -> 2 livelli bloccati, 1 -> 1 livello bloccato, 3 -> tutti i livello sbloccati
             }
-
-            ContentView(Lista = createDataList()) //permette di passare una lista diversa a seconda del livello (blu, giallo, verde)
-
 
         }
     }

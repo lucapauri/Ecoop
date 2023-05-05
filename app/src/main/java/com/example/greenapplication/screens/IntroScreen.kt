@@ -28,8 +28,11 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 @Composable
 fun IntroScreen(  modifier: Modifier = Modifier)
 {
-    GenericScreen(title = "")
-    {
+    Box(
+        modifier = Modifier
+            .background(color = MaterialTheme.colors.background)
+            .fillMaxSize())
+
         Column(
             modifier.fillMaxWidth()) {
             Spacer(Modifier.weight(1f))
@@ -76,13 +79,14 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             }
             Spacer(Modifier.weight(1f))
         }
-    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewIntroScreen() {
     GameSkeletonTheme() {
+
         IntroScreen()
     }
 
