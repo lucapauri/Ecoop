@@ -208,11 +208,8 @@ fun PreviewMapScreen() {
     GameSkeletonTheme {
 
         MapScreen(SelectedIcon = 0)
-        //CardDemo()
         GridScreen(team = "Quartiere Rosso")
 
-
     }
-
 }
 

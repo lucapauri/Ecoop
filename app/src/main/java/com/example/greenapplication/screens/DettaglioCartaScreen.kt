@@ -27,10 +27,55 @@ import kotlinx.coroutines.processNextEventInCurrentThread
 
 data class Struttura(val name: String, val energy: Int, val qualitylife: Int, val co2: Int,
                      val res: Int, val content: String, val description: String)
-val students = listOf(
+val strutture = listOf(
     Struttura("Centrale a Gas", 15, 2, 8,
         res = com.example.greenapplication.R.drawable.centralegas, content = "gas",
     description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale a Carbone", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.carbone, content = "carbone",
+        description = "Un centrale a carbone è una centrale termoelettrica che brucia carbone per generare energia elettrica."),
+    Struttura("Bus", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.bus, content = "bus",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale a Biometano", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.biometano, content = "biometano",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Parco", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.parco, content = "parco",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+
+    Struttura("Metro", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.metro, content = "metro",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Area Verde", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.areaverde, content = "areaVerde",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale Nucleare", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.nucleare, content = "nucleare",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale Idroelettrica", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.idroelettrica, content = "idroelettrica",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale Geotermica", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.geotermica, content = "geotermica",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+
+    Struttura("Pista ciclabile", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.ciclabile, content = "ciclabile",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Orto cittadino", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.orto, content = "orto",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Colonnine auto elettriche", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.colonnine, content = "colonnine",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale Fotovoltaica", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.fotovoltaica, content = "fotovoltaica",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+    Struttura("Centrale Eolica", 15, 2, 8,
+        res = com.example.greenapplication.R.drawable.eolica, content = "eolica",
+        description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
+
 
 )
 //.elementAt(0)
@@ -138,13 +183,13 @@ fun DettaglioCarta(CardData: Struttura) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewShopScreen() {
+fun PreviewDettaglioCarta() {
     GameSkeletonTheme {
         Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}, 
         ) {
             GenericScreen(title = "Quartiere Rosso")
-            //Spacer(modifier = Modifier.height(100.dp))
-            DettaglioCarta(students.elementAt(0))
+            DettaglioCarta(strutture.elementAt(0)) //Inserire l'indice dell'infrastruttura a seconda
+                                                        // della carta che si vuole visualizzare
         }
     }
 }

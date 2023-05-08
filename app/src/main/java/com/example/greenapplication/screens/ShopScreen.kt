@@ -288,8 +288,11 @@ class ShopScreen : ComponentActivity () {
                 GenericScreen(title = "Quartiere Rosso")
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Spacer(modifier = Modifier.height(150.dp))
-                    TopBarShop(SelectedIcon = 0) // 0 -> 2 livelli bloccati, 1 -> 1 livello bloccato, 3 -> tutti i livello sbloccati
-                    ContentView(Lista = createDataList()) //permette di passare una lista diversa a seconda del livello (blu, giallo, verde)
+                    TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,
+                                                        // 2 -> 1 livello bloccato,
+                                                        // 3 -> tutti i livello sbloccati
+                    ContentView(Lista = createDataListVerde()) //permette di passare una
+                                            // lista diversa a seconda del livello (blu, giallo, verde)
                 }
 
             }
