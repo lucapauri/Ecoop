@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.example.greenapplication.Infrastruttura
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,6 +22,8 @@ class GameManager(private val scope:CoroutineScope) {
     private val firebase = Firebase.database(URL)
     private val firebaseAuth = Firebase.auth
     val teamNames = listOf("team1", "team2", "team3", "team4")
+    val items : MutableList<Infrastruttura> = mutableListOf<Infrastruttura>();
+    val initialItems = 3
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -34,6 +37,22 @@ class GameManager(private val scope:CoroutineScope) {
                 mutableScreenName.value = ScreenName.Error(e.message?:"Unknown error")
             }
         }
+        items.add(Infrastruttura(1,"infrastruttura1",20,30,40,1,""))
+        items.add(Infrastruttura(2,"infrastruttura2",20,30,40,1,""))
+        items.add(Infrastruttura(3,"infrastruttura3",20,30,40,1,""))
+        items.add(Infrastruttura(4,"infrastruttura4",20,30,40,1,""))
+        items.add(Infrastruttura(5,"infrastruttura5",20,30,40,1,""))
+        items.add(Infrastruttura(6,"infrastruttura6",20,30,40,1,""))
+        items.add(Infrastruttura(7,"infrastruttura7",20,30,40,1,""))
+        items.add(Infrastruttura(8,"infrastruttura8",20,30,40,1,""))
+        items.add(Infrastruttura(9,"infrastruttura9",20,30,40,1,""))
+        items.add(Infrastruttura(10,"infrastruttura10",20,30,40,1,""))
+        items.add(Infrastruttura(11,"infrastruttura11",20,30,40,1,""))
+        items.add(Infrastruttura(12,"infrastruttura12",20,30,40,1,""))
+        items.add(Infrastruttura(13,"infrastruttura13",20,30,40,2,""))
+        items.add(Infrastruttura(14,"infrastruttura14",20,30,40,2,""))
+        items.add(Infrastruttura(25,"infrastruttura25",20,30,40,3,""))
+        items.add(Infrastruttura(26,"infrastruttura26",20,30,40,3,""))
     }
 
     private val mutableScreenName = MutableLiveData<ScreenName>().also {
@@ -199,6 +218,14 @@ class GameManager(private val scope:CoroutineScope) {
                 })
                 ref.child("turn").setValue(teamNames[0]).await()
                 ref.child("screen").setValue("Playing").await()
+                teamNames.forEach{
+                    val team = ref.child("teams").child(it).child("items")
+                    var i = 1;
+                    val squares = generateRandom(initialItems, 1, 9)
+                    generateRandom(initialItems, 1, 12).forEachIndexed{ index, it ->
+                        team.child(it.toString()).setValue(squares[index])
+                    }
+                }
                 mutableScreenName.value = ScreenName.Dashboard
                 Log.d("GameManager", "Game started")
             } catch (e: Exception) {
@@ -221,6 +248,23 @@ class GameManager(private val scope:CoroutineScope) {
 
             }
         }
+    }
+
+    fun generateRandom(numbers : Int, min : Int, max:Int): List<Int>{
+        val list : MutableList<Int> = mutableListOf<Int>()
+        var i = 0;
+        while (i < numbers){
+            val rand = (min..max).random()
+            if(list.find { it == rand } == null){
+                list.add(rand)
+                i++
+            }
+        }
+        return list
+    }
+
+    fun sumParameter(parameter : String){
+        /*TODO*/
     }
 
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
+import it.polito.did.gameskeleton.screens.MainScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GenericScreen(title = "Generic Screen")
+                    MainScreen()
                 }
             }
         }
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PreviewFrame() {
     GameSkeletonTheme {
-        GenericScreen(title = "Generic Screen")
+        MainScreen()
     }
 
 }
