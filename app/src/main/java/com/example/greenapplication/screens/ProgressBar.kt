@@ -40,7 +40,7 @@ fun CustomProgressBar(
 }
 
 @Composable
-fun IconBar(percentCO2: Int, percentHealth: Int) {
+fun IconBar(percentCO2: Int, percentHealth: Int, energyValue: Int) {
 
     //Spacer(Modifier.height(20.dp))
     Row(horizontalArrangement = Arrangement.Center) {
@@ -110,7 +110,7 @@ fun IconBar(percentCO2: Int, percentHealth: Int) {
             Icon(painter = painterResource(id = R.drawable.energy), "", modifier = Modifier.size(40.dp),
                 tint = Color.DarkGray)
             Spacer(Modifier.width(10.dp))
-            Text(text = "25")
+            Text(text = energyValue.toString())
         }
 
     }

@@ -196,7 +196,7 @@ fun GridScreen(team: String){
             color = MaterialTheme.colors.background,
             textAlign = TextAlign.Center)
         Spacer(Modifier.height(20.dp))
-        IconBar(percentCO2 = 65, percentHealth = 70)
+        IconBar(percentCO2 = 65, percentHealth = 70, energyValue = 25)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         CardDemo()
     }
@@ -208,11 +208,8 @@ fun PreviewMapScreen() {
     GameSkeletonTheme {
 
         MapScreen(SelectedIcon = 0)
-        //CardDemo()
         GridScreen(team = "Quartiere Rosso")
 
-
     }
-
 }
 
