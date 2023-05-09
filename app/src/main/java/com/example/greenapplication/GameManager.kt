@@ -283,7 +283,7 @@ class GameManager(private val scope:CoroutineScope) {
         val list : MutableList<Int> = mutableListOf<Int>()
         var i = 0;
         while (i < numbers){
-            val rand = (min..max).random()
+            val rand = (min..max).shuffled().last()
             if(list.find { it == rand } == null){
                 list.add(rand)
                 i++
