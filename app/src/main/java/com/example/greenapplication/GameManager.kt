@@ -73,6 +73,14 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val turn: LiveData<String> = mutableTurn
 
+    private val mutableItemsTeams = MutableLiveData<Map<String, Map<String,String>>>().also {
+        var map : MutableMap<String,Map<String,String>> = mutableMapOf<String,Map<String,String>>()
+        teamNames.forEach{ team ->
+            map[team] = emptyMap()
+        }
+        it.value = map
+    }
+    val itemsTeams : LiveData<Map<String, Map<String,String>>> = mutableItemsTeams
 
 
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
@@ -220,7 +228,28 @@ class GameManager(private val scope:CoroutineScope) {
                 ref.child("screen").setValue("Playing").await()
                 teamNames.forEach{
                     val team = ref.child("teams").child(it).child("items")
-                    var i = 1;
+                    team.addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val v = snapshot.value
+                            Log.d("GameManager", v.toString())
+                            if (v!=null && v is Map<*, *>) {
+                                var map = mutableMapOf<String, Map<String,String>>()
+                                mutableItemsTeams.value?.forEach{ item ->
+                                   if(item.key == it){
+                                       map[item.key] = v as Map<String, String>
+                                   }else
+                                       map[item.key] = item.value
+                                }
+                                mutableItemsTeams.value = map
+                                Log.d("GameManager", map.toString())
+                                ref.child("teams").child(it).child("CO2").setValue(sumCO2(it))
+                                ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     val squares = generateRandom(initialItems, 1, 9)
                     generateRandom(initialItems, 1, 12).forEachIndexed{ index, it ->
                         team.child(it.toString()).setValue(squares[index])
@@ -263,8 +292,19 @@ class GameManager(private val scope:CoroutineScope) {
         return list
     }
 
-    fun sumParameter(parameter : String){
-        /*TODO*/
+    fun sumCO2(team : String) : Int{
+        Log.d("GameManager", itemsTeams.value.toString())
+        var ids = itemsTeams.value?.get(team)?.keys
+        var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
+        return objects.sumOf { it.CO2 }
+    }
+
+    fun sumHappiness(team : String) : Int{
+        Log.d("GameManager", itemsTeams.value.toString())
+        Log.d("GameManager", "sommaaaa")
+        var ids = itemsTeams.value?.get(team)?.keys
+        var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
+        return objects.sumOf { it.happiness }
     }
 
 }
