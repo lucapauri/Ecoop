@@ -1,6 +1,7 @@
 package it.polito.did.gameskeleton
 
 import android.util.Log
+import androidx.compose.animation.core.snap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,9 +22,10 @@ class GameManager(private val scope:CoroutineScope) {
     private val URL = "https://greenapplication-bfb6f-default-rtdb.europe-west1.firebasedatabase.app/"
     private val firebase = Firebase.database(URL)
     private val firebaseAuth = Firebase.auth
-    val teamNames = listOf("team1", "team2", "team3", "team4")
-    val items : MutableList<Infrastruttura> = mutableListOf<Infrastruttura>();
-    val initialItems = 2
+    private val teamNames = listOf("team1", "team2", "team3", "team4")
+    private val items : MutableList<Infrastruttura> = mutableListOf<Infrastruttura>();
+    private val initialItems = 2
+    private val initialEnergy = 50
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -55,24 +57,29 @@ class GameManager(private val scope:CoroutineScope) {
         items.add(Infrastruttura(16,"Centrale fotovoltaica",4,30,40,3,""))
     }
 
+    //Current screen name
     private val mutableScreenName = MutableLiveData<ScreenName>().also {
         it.value = ScreenName.Splash
     }
     val screenName: LiveData<ScreenName> = mutableScreenName
 
+    //Current match id
     private val mutableMatchId = MutableLiveData<String>()
     val matchId: LiveData<String> = mutableMatchId
 
+    //Current players
     private val mutablePlayers = MutableLiveData<Map<String, String>>().also {
         it.value = emptyMap()
     }
     val players: LiveData<Map<String, String>> = mutablePlayers
 
+    //Current team turn
     private val mutableTurn = MutableLiveData<String>().also {
         it.value = ""
     }
     val turn: LiveData<String> = mutableTurn
 
+    //Current items assigned
     private val mutableItemsTeams = MutableLiveData<Map<String, Map<String,String>>>().also {
         var map : MutableMap<String,Map<String,String>> = mutableMapOf<String,Map<String,String>>()
         teamNames.forEach{ team ->
@@ -82,6 +89,25 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val itemsTeams : LiveData<Map<String, Map<String,String>>> = mutableItemsTeams
 
+    //Current CO2
+    private val mutableCO2 = MutableLiveData<Map<String,String>>().also {
+        var map : MutableMap<String,String> = mutableMapOf<String,String>()
+        teamNames.forEach{ team ->
+            map[team] = "0"
+        }
+        it.value = map
+    }
+    val cO2 : LiveData<Map<String,String>> = mutableCO2
+
+    //Current Happiness
+    private val mutableHappiness = MutableLiveData<Map<String,String>>().also {
+        var map : MutableMap<String,String> = mutableMapOf<String,String>()
+        teamNames.forEach{ team ->
+            map[team] = "0"
+        }
+        it.value = map
+    }
+    val happiness : LiveData<Map<String,String>> = mutableHappiness
 
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
         val teams = players.keys.groupBy { players[it].toString() }
@@ -130,8 +156,8 @@ class GameManager(private val scope:CoroutineScope) {
     fun createNewGame() {
         scope.launch {
             try {
-                //val ref = firebase.getReference("abc")
-                val ref = firebase.reference.push()
+                val ref = firebase.getReference("abc")
+                //val ref = firebase.reference.push()
                 Log.d("GameManager","Creating match ${ref.key}")
                 ref.setValue(
                     mapOf(
@@ -189,6 +215,7 @@ class GameManager(private val scope:CoroutineScope) {
                         .setValue("").await()
                     watchPlayers()
                     watchScreen()
+                    //Listen variable turn
                     ref.child("turn").addValueEventListener(object: ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val v = snapshot.value
@@ -200,6 +227,33 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    teamNames.forEach{
+                        val team = ref.child("teams").child(it).child("items")
+                        //Listen items change
+                        team.addValueEventListener(object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                fetchItems(snapshot,it)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                        //Listen CO2 change
+                        ref.child("teams").child(it).child("CO2").addValueEventListener(object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                fetchCO2(snapshot, it)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                        //Listen happiness change
+                        ref.child("teams").child(it).child("Happiness").addValueEventListener(object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                fetchHappiness(snapshot, it)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                    }
                 } else {
                     mutableScreenName.value = ScreenName.Error("Invalid gameId")
                 }
@@ -228,31 +282,37 @@ class GameManager(private val scope:CoroutineScope) {
                 ref.child("screen").setValue("Playing").await()
                 teamNames.forEach{
                     val team = ref.child("teams").child(it).child("items")
+                    //Listen items change
                     team.addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val v = snapshot.value
-                            Log.d("GameManager", snapshot.toString())
-                            if (v!=null && v is Map<*, *>) {
-                                var map = mutableMapOf<String, Map<String,String>>()
-                                mutableItemsTeams.value?.forEach{ item ->
-                                   if(item.key == it){
-                                       map[item.key] = v as Map<String, String>
-                                   }else
-                                       map[item.key] = item.value
-                                }
-                                mutableItemsTeams.value = map
-                                Log.d("GameManager", map.toString())
-                                ref.child("teams").child(it).child("CO2").setValue(sumCO2(it))
-                                ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
-                            }
+                            fetchItems(snapshot,it)
+                            ref.child("teams").child(it).child("CO2").setValue(sumCO2(it))
+                            ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
                         }
-
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    //Listen CO2 change
+                    ref.child("teams").child(it).child("CO2").addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            fetchCO2(snapshot, it)
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
+                    //Listen happiness change
+                    ref.child("teams").child(it).child("Happiness").addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            fetchHappiness(snapshot, it)
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
+                    //random items assignment
                     val squares = generateRandom(initialItems, 1, 9)
                     generateRandom(initialItems, 1, 6).forEachIndexed{ index, it ->
-                        team.child(it.toString()).setValue(squares[index])
+                        team.child(squares[index].toString()).setValue(it.toString())
                     }
                 }
                 mutableScreenName.value = ScreenName.Dashboard
@@ -260,6 +320,60 @@ class GameManager(private val scope:CoroutineScope) {
             } catch (e: Exception) {
                 mutableScreenName.value = ScreenName.Error(e.message ?: "Generic error")
             }
+        }
+    }
+
+    fun fetchCO2(snapshot: DataSnapshot, teamName: String){
+        val v = snapshot?.value ?: "0"
+        Log.d("GameManager", snapshot.toString())
+        if(v is String){
+            var map = mutableMapOf<String,String>()
+            mutableCO2.value?.forEach{ item ->
+                if(item.key == teamName){
+                    map[item.key] = v
+                }else
+                    map[item.key] = item.value
+            }
+            mutableCO2.value = map
+            Log.d("GameManager", map.toString())
+        }
+    }
+
+    fun fetchHappiness(snapshot: DataSnapshot, teamName: String){
+        val v = snapshot?.value ?: "0"
+        if(v is String){
+            var map = mutableMapOf<String,String>()
+            mutableHappiness.value?.forEach{ item ->
+                if(item.key == teamName){
+                    map[item.key] = v
+                }else
+                    map[item.key] = item.value
+            }
+            mutableHappiness.value = map
+        }
+    }
+
+    fun fetchItems(snapshot: DataSnapshot, teamName: String){
+        val v = snapshot.value
+        if (v!=null && v is Map<*, *>) {
+            var map = mutableMapOf<String, Map<String,String>>()
+            mutableItemsTeams.value?.forEach{ item ->
+                if(item.key == teamName){
+                    map[item.key] = v as Map<String, String>
+                }else
+                    map[item.key] = item.value
+            }
+            mutableItemsTeams.value = map
+        }
+        if(v == null){
+            var map = mutableMapOf<String, Map<String,String>>()
+            mutableItemsTeams.value?.forEach{ item ->
+                if(item.key == teamName){
+                    map[item.key] = emptyMap()
+                }else
+                    map[item.key] = item.value
+            }
+            mutableItemsTeams.value = map
         }
     }
 
@@ -279,7 +393,7 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
-    fun generateRandom(numbers : Int, min : Int, max:Int): List<Int>{
+    private fun generateRandom(numbers : Int, min : Int, max:Int): List<Int>{
         val list : MutableList<Int> = mutableListOf<Int>()
         var i = 0;
         while (i < numbers){
@@ -292,16 +406,25 @@ class GameManager(private val scope:CoroutineScope) {
         return list
     }
 
-    fun sumCO2(team : String) : Int{
-        var ids = itemsTeams.value?.get(team)?.keys
+    fun sumCO2(team : String) : String{
+        var ids = itemsTeams.value?.get(team)?.values
         var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
-        return objects.sumOf { it.CO2 }
+        return objects.sumOf { it.CO2 }.toString()
     }
 
-    fun sumHappiness(team : String) : Int{
-        var ids = itemsTeams.value?.get(team)?.keys
+    fun sumHappiness(team : String) : String{
+        var ids = itemsTeams.value?.get(team)?.values
         var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
-        return objects.sumOf { it.happiness }
+        return objects.sumOf { it.happiness }.toString()
     }
 
+    fun addItem(team : String, id : Int, square : Int){
+        val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+        ref.child("teams").child(team).child("items").child(square.toString()).setValue(id.toString())
+    }
+
+    fun deleteItem(team : String, square : Int){
+        val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+        ref.child("teams").child(team).child("items").child(square.toString()).removeValue()
+    }
 }
