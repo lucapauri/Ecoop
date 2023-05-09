@@ -109,6 +109,16 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val happiness : LiveData<Map<String,String>> = mutableHappiness
 
+    //Current energy
+    private val mutableEnergy = MutableLiveData<Map<String,String>>().also {
+        var map : MutableMap<String,String> = mutableMapOf<String,String>()
+        teamNames.forEach{ team ->
+            map[team] = initialEnergy.toString()
+        }
+        it.value = map
+    }
+    val energy : LiveData<Map<String,String>> = mutableEnergy
+
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
         val teams = players.keys.groupBy { players[it].toString() }
         val sizes = teamNames.map{ teams[it]?.size ?: 0 }
@@ -253,6 +263,14 @@ class GameManager(private val scope:CoroutineScope) {
                             override fun onCancelled(error: DatabaseError) {
                             }
                         })
+                        //Listen energy change
+                        ref.child("teams").child(it).child("Energy").addValueEventListener(object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                fetchEnergy(snapshot, it)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
                     }
                 } else {
                     mutableScreenName.value = ScreenName.Error("Invalid gameId")
@@ -309,11 +327,21 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    //Listen energy change
+                    ref.child("teams").child(it).child("Energy").addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            fetchEnergy(snapshot, it)
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     //random items assignment
                     val squares = generateRandom(initialItems, 1, 9)
                     generateRandom(initialItems, 1, 6).forEachIndexed{ index, it ->
                         team.child(squares[index].toString()).setValue(it.toString())
                     }
+                    //Initialize energy
+                    ref.child("teams").child(it).child("Energy").setValue(initialEnergy.toString())
                 }
                 mutableScreenName.value = ScreenName.Dashboard
                 Log.d("GameManager", "Game started")
@@ -353,6 +381,20 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
+    fun fetchEnergy(snapshot: DataSnapshot, teamName: String){
+        val v = snapshot?.value ?: "0"
+        if(v is String){
+            var map = mutableMapOf<String,String>()
+            mutableEnergy.value?.forEach{ item ->
+                if(item.key == teamName){
+                    map[item.key] = v
+                }else
+                    map[item.key] = item.value
+            }
+            mutableEnergy.value = map
+        }
+    }
+
     fun fetchItems(snapshot: DataSnapshot, teamName: String){
         val v = snapshot.value
         if (v!=null && v is Map<*, *>) {
@@ -386,9 +428,13 @@ class GameManager(private val scope:CoroutineScope) {
                     var index = teamNames.indexOf(v)
                     index = (index + 1) % teamNames.size
                     ref.child("turn").setValue(teamNames[index]).await()
+                    var ids = itemsTeams.value?.get(teamNames[index])?.values
+                    var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
+                    val price = objects.sumOf { it.energy }
+                    updateEnergy(price, teamNames[index])
                 }
             }catch (e:Exception){
-
+                mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
         }
     }
@@ -418,13 +464,43 @@ class GameManager(private val scope:CoroutineScope) {
         return objects.sumOf { it.happiness }.toString()
     }
 
+    fun updateEnergy(newEnergy : Int, team :String){
+        scope.launch {
+            try{
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                var pEnergy = energy.value?.get(team)?.toInt() ?: 0
+                var sum = pEnergy + newEnergy
+                ref.child("teams").child(team).child("Energy").setValue(sum.toString())
+            }catch (e:Exception){
+                mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+            }
+        }
+    }
+
     fun addItem(team : String, id : Int, square : Int){
-        val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-        ref.child("teams").child(team).child("items").child(square.toString()).setValue(id.toString())
+        scope.launch {
+            try {
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                ref.child("teams").child(team).child("items").child(square.toString()).setValue(id.toString())
+            }catch (e:Exception){
+                mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+            }
+        }
+        val price = items.first { it.id == id }.price
+        updateEnergy(price, team)
     }
 
     fun deleteItem(team : String, square : Int){
-        val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-        ref.child("teams").child(team).child("items").child(square.toString()).removeValue()
+        scope.launch {
+            try {
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                ref.child("teams").child(team).child("items").child(square.toString()).removeValue()
+            }catch (e:Exception){
+                mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+            }
+        }
+        val id = itemsTeams.value?.get(team)?.get(square.toString()) ?: ""
+        val price = -(items.first { it.id == id.toInt() }.price)/2
+        updateEnergy(price, team)
     }
 }

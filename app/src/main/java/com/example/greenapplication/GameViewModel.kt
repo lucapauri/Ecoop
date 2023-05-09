@@ -20,5 +20,6 @@ class GameViewModel: ViewModel() {
     val itemsTeams = gameManager.itemsTeams
     val cO2 = gameManager.cO2
     val happiness = gameManager.happiness
+    val energy = gameManager.energy
 
 }
