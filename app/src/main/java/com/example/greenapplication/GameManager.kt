@@ -23,7 +23,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val firebaseAuth = Firebase.auth
     val teamNames = listOf("team1", "team2", "team3", "team4")
     val items : MutableList<Infrastruttura> = mutableListOf<Infrastruttura>();
-    val initialItems = 3
+    val initialItems = 2
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -37,22 +37,22 @@ class GameManager(private val scope:CoroutineScope) {
                 mutableScreenName.value = ScreenName.Error(e.message?:"Unknown error")
             }
         }
-        items.add(Infrastruttura(1,"infrastruttura1",20,30,40,1,""))
-        items.add(Infrastruttura(2,"infrastruttura2",20,30,40,1,""))
-        items.add(Infrastruttura(3,"infrastruttura3",20,30,40,1,""))
-        items.add(Infrastruttura(4,"infrastruttura4",20,30,40,1,""))
-        items.add(Infrastruttura(5,"infrastruttura5",20,30,40,1,""))
-        items.add(Infrastruttura(6,"infrastruttura6",20,30,40,1,""))
-        items.add(Infrastruttura(7,"infrastruttura7",20,30,40,1,""))
-        items.add(Infrastruttura(8,"infrastruttura8",20,30,40,1,""))
-        items.add(Infrastruttura(9,"infrastruttura9",20,30,40,1,""))
-        items.add(Infrastruttura(10,"infrastruttura10",20,30,40,1,""))
-        items.add(Infrastruttura(11,"infrastruttura11",20,30,40,1,""))
-        items.add(Infrastruttura(12,"infrastruttura12",20,30,40,1,""))
-        items.add(Infrastruttura(13,"infrastruttura13",20,30,40,2,""))
-        items.add(Infrastruttura(14,"infrastruttura14",20,30,40,2,""))
-        items.add(Infrastruttura(25,"infrastruttura25",20,30,40,3,""))
-        items.add(Infrastruttura(26,"infrastruttura26",20,30,40,3,""))
+        items.add(Infrastruttura(1,"Parco",-4,4,5,1,""))
+        items.add(Infrastruttura(2,"Bus",5,3,10,1,""))
+        items.add(Infrastruttura(3,"Centrale a carbone",15,1,30,1,""))
+        items.add(Infrastruttura(4,"Centrale a gas",13,2,28,1,""))
+        items.add(Infrastruttura(5,"Impianto a biometano",12,3,25,1,""))
+        items.add(Infrastruttura(6,"Termovalorizzatore",4,-3,30,1,""))
+        items.add(Infrastruttura(7,"Metropolitana",3,6,12,2,""))
+        items.add(Infrastruttura(8,"Area Verde",-8,8,8,2,""))
+        items.add(Infrastruttura(9,"Centrale idroelettrica",10,4,40,2,""))
+        items.add(Infrastruttura(10,"Centrale Geotermica",10,7,40,2,""))
+        items.add(Infrastruttura(11,"Centrale nucleare",5,2,40,2,""))
+        items.add(Infrastruttura(12,"Colonnine per auto elettriche",3,7,40,3,""))
+        items.add(Infrastruttura(13,"Orto Cittadino",-12,10,10,3,""))
+        items.add(Infrastruttura(14,"Pista ciclabile",0,8,8,3,""))
+        items.add(Infrastruttura(15,"Centrale eolica",5,2,3,3,""))
+        items.add(Infrastruttura(16,"Centrale fotovoltaica",4,30,40,3,""))
     }
 
     private val mutableScreenName = MutableLiveData<ScreenName>().also {
@@ -130,8 +130,8 @@ class GameManager(private val scope:CoroutineScope) {
     fun createNewGame() {
         scope.launch {
             try {
-                val ref = firebase.getReference("abc")
-                //val ref = firebase.reference.push()
+                //val ref = firebase.getReference("abc")
+                val ref = firebase.reference.push()
                 Log.d("GameManager","Creating match ${ref.key}")
                 ref.setValue(
                     mapOf(
@@ -231,7 +231,7 @@ class GameManager(private val scope:CoroutineScope) {
                     team.addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val v = snapshot.value
-                            Log.d("GameManager", v.toString())
+                            Log.d("GameManager", snapshot.toString())
                             if (v!=null && v is Map<*, *>) {
                                 var map = mutableMapOf<String, Map<String,String>>()
                                 mutableItemsTeams.value?.forEach{ item ->
@@ -251,7 +251,7 @@ class GameManager(private val scope:CoroutineScope) {
                         }
                     })
                     val squares = generateRandom(initialItems, 1, 9)
-                    generateRandom(initialItems, 1, 12).forEachIndexed{ index, it ->
+                    generateRandom(initialItems, 1, 6).forEachIndexed{ index, it ->
                         team.child(it.toString()).setValue(squares[index])
                     }
                 }
@@ -293,15 +293,12 @@ class GameManager(private val scope:CoroutineScope) {
     }
 
     fun sumCO2(team : String) : Int{
-        Log.d("GameManager", itemsTeams.value.toString())
         var ids = itemsTeams.value?.get(team)?.keys
         var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
         return objects.sumOf { it.CO2 }
     }
 
     fun sumHappiness(team : String) : Int{
-        Log.d("GameManager", itemsTeams.value.toString())
-        Log.d("GameManager", "sommaaaa")
         var ids = itemsTeams.value?.get(team)?.keys
         var objects = items.filter { ids?.contains(it.id.toString()) ?: false }
         return objects.sumOf { it.happiness }
