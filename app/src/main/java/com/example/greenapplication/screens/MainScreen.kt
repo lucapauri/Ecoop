@@ -24,8 +24,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
             vm::onStartGame,
             modifier)
         is ScreenName.WaitingStart -> WaitScreen(modifier)
-        is ScreenName.Dashboard -> DashboardScreen(modifier)
-        is ScreenName.Playing -> PlayerScreen(screenName.team,vm::onNextTurn, modifier,)
+        is ScreenName.Dashboard -> DashboardScreen(vm::formatTime,vm.timer ,modifier)
+        is ScreenName.Playing -> PlayerScreen(vm::formatTime,vm.timer, screenName.team,vm::onNextTurn, vm::addItem, vm::deleteItem, modifier)
         is ScreenName.Error -> ErrorScreen(screenName.message, modifier)
         null -> Box(modifier)
     }

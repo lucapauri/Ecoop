@@ -12,6 +12,7 @@ class GameViewModel: ViewModel() {
     fun onNextTurn() = gameManager.nextTurn()
     fun addItem(team : String, id : Int, square : Int) = gameManager.addItem(team, id, square)
     fun deleteItem(team : String, square : Int) = gameManager.deleteItem(team, square)
+    fun formatTime(millis : Long) = gameManager.formatTime(millis)
 
     val players = gameManager.players
     val screenName = gameManager.screenName
@@ -21,5 +22,6 @@ class GameViewModel: ViewModel() {
     val cO2 = gameManager.cO2
     val happiness = gameManager.happiness
     val energy = gameManager.energy
+    val timer = gameManager.timer
 
 }

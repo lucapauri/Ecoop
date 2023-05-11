@@ -1,14 +1,14 @@
 package it.polito.did.gameskeleton
 
+import android.os.Handler
 import android.util.Log
-import androidx.compose.animation.core.snap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.greenapplication.Infrastruttura
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 
+
 class GameManager(private val scope:CoroutineScope) {
     private val URL = "https://greenapplication-bfb6f-default-rtdb.europe-west1.firebasedatabase.app/"
     private val firebase = Firebase.database(URL)
@@ -26,6 +27,8 @@ class GameManager(private val scope:CoroutineScope) {
     private val items : MutableList<Infrastruttura> = mutableListOf<Infrastruttura>();
     private val initialItems = 2
     private val initialEnergy = 50
+    private val initialTime = 1800000
+    private val refreshTimer = 500
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -118,6 +121,12 @@ class GameManager(private val scope:CoroutineScope) {
         it.value = map
     }
     val energy : LiveData<Map<String,String>> = mutableEnergy
+
+    private val mutableTimer = MutableLiveData<Long>().also {
+        it.value = initialTime.toLong()
+    }
+
+    val timer : LiveData<Long> = mutableTimer
 
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
         val teams = players.keys.groupBy { players[it].toString() }
@@ -272,6 +281,17 @@ class GameManager(private val scope:CoroutineScope) {
                             }
                         })
                     }
+                    //Listen Timer
+                    ref.child("Timer").addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if(snapshot.value != null){
+                                mutableTimer.value = snapshot.value as Long
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                 } else {
                     mutableScreenName.value = ScreenName.Error("Invalid gameId")
                 }
@@ -349,11 +369,37 @@ class GameManager(private val scope:CoroutineScope) {
                 mutableScreenName.value = ScreenName.Error(e.message ?: "Generic error")
             }
         }
+        val id = matchId.value ?: throw RuntimeException("Missing match Id")
+        val ref = firebase.getReference(id)
+        //Listen Timer
+        ref.child("Timer").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.value != null){
+                    mutableTimer.value = snapshot.value as Long
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+        //Create Timer
+        startTimer(ref)
+    }
+
+    private fun startTimer(ref : DatabaseReference){
+        val handlerTime = Handler();
+        handlerTime.postDelayed(
+            object : Runnable {
+                override fun run() {
+                    ref.child("Timer").setValue(timer.value?.minus(refreshTimer.toLong()))
+                    handlerTime.postDelayed(this, refreshTimer.toLong())
+                }
+            }
+        , refreshTimer.toLong())
     }
 
     fun fetchCO2(snapshot: DataSnapshot, teamName: String){
         val v = snapshot?.value ?: "0"
-        Log.d("GameManager", snapshot.toString())
         if(v is String){
             var map = mutableMapOf<String,String>()
             mutableCO2.value?.forEach{ item ->
@@ -363,7 +409,6 @@ class GameManager(private val scope:CoroutineScope) {
                     map[item.key] = item.value
             }
             mutableCO2.value = map
-            Log.d("GameManager", map.toString())
         }
     }
 
@@ -486,7 +531,7 @@ class GameManager(private val scope:CoroutineScope) {
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
         }
-        val price = items.first { it.id == id }.price
+        val price = -items.first { it.id == id }.price
         updateEnergy(price, team)
     }
 
@@ -502,5 +547,12 @@ class GameManager(private val scope:CoroutineScope) {
         val id = itemsTeams.value?.get(team)?.get(square.toString()) ?: ""
         val price = -(items.first { it.id == id.toInt() }.price)/2
         updateEnergy(price, team)
+    }
+
+    fun formatTime(millis : Long) : List<Int>{
+        var seconds = (millis / 1000).toInt()
+        val minutes = seconds / 60
+        seconds %= 60
+        return listOf(minutes, seconds)
     }
 }
