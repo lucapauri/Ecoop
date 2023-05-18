@@ -15,11 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.greenapplication.Infrastruttura
 import com.example.greenapplication.pag1.Text
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
-fun PollScreen(){
+fun PollScreen(infrastruttura: String){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,7 +39,19 @@ fun PollScreen(){
             )
 
             androidx.compose.material.Text(
-                text = "Proposta inserimento infrastruttura blablabla: \nSei favorevole a questa scelta? ",
+                text = "Proposta inserimento infrastruttura",
+                style = MaterialTheme.typography.subtitle2,
+                color = MaterialTheme.colors.onBackground,
+                textAlign = TextAlign.Center
+            )
+            androidx.compose.material.Text(
+                text = "${infrastruttura}:",
+                style = MaterialTheme.typography.subtitle2,
+                color = MaterialTheme.colors.onBackground,
+                textAlign = TextAlign.Center
+            )
+            androidx.compose.material.Text(
+                text = "Sei favorevole a questa scelta? ",
                 style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.onBackground,
                 textAlign = TextAlign.Center
@@ -73,6 +86,6 @@ fun PreviewPollScreen(){
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 2)
         GridScreen(team = "Quartiere Rosso")
-        PollScreen()
+        PollScreen("Centrale geotermica")
     }
 }
