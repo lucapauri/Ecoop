@@ -6,6 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +95,11 @@ fun DettaglioCarta(CardData: Struttura) {
             .clickable { },
         elevation = 10.dp
     ) {
+        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 300.dp)) {
+            Icon(imageVector = Icons.Default.Close, "",
+                tint = Color.DarkGray)
+        }
+
         Column(
             modifier = Modifier.padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -172,7 +180,6 @@ fun DettaglioCarta(CardData: Struttura) {
                     modifier = Modifier.padding(horizontal = 80.dp))
             }
 
-            
         }
     }
 }
@@ -187,7 +194,7 @@ fun PreviewDettaglioCarta() {
     GameSkeletonTheme {
         Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}, 
         ) {
-            GenericScreen(title = "Quartiere Rosso")
+            ValueScreen(title = "Quartiere Rosso")
             DettaglioCarta(strutture.elementAt(0)) //Inserire l'indice dell'infrastruttura a seconda
                                                         // della carta che si vuole visualizzare
         }

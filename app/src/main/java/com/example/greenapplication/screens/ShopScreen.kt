@@ -270,12 +270,9 @@ class ShopScreen : ComponentActivity () {
             )
         )
 
-
         return list
     }
     
-    
-
 
 
     @Preview(showBackground = true)
@@ -285,7 +282,7 @@ class ShopScreen : ComponentActivity () {
 
             Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
 
-                GenericScreen(title = "Quartiere Rosso")
+                ValueScreen(title = "Quartiere Rosso")
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Spacer(modifier = Modifier.height(150.dp))
                     TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,

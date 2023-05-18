@@ -1,4 +1,5 @@
-package it.polito.did.gameskeleton.screens
+package com.example.greenapplication.screens
+
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,7 +23,7 @@ import com.example.greenapplication.screens.IconBar
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
-fun GenericScreen(
+fun ValueScreen(
     title: String,
     modifier: Modifier = Modifier,
     content: @Composable() () -> Unit = {}
@@ -61,7 +62,8 @@ fun GenericScreen(
                 textAlign = TextAlign.Center)
 
             Spacer(Modifier.height(20.dp))
-
+            IconBar(percentCO2 = 65, percentHealth = 70, energyValue = 25)
+            Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
             content()
         }
     }
@@ -69,9 +71,8 @@ fun GenericScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewGenericScreen() {
+fun PreviewValueScreen() {
     GameSkeletonTheme {
-        GenericScreen(title = "Generic Screen")
+        ValueScreen(title = "Valori Screen")
     }
-
 }
