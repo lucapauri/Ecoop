@@ -134,9 +134,10 @@ fun SingleCard(res: Int, content: String ) {
 fun CardDemo() {
   Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.Center
   ) {
+      Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
           .fillMaxWidth()
-          .height(120.dp),
+          .height(115.dp),
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
@@ -144,9 +145,10 @@ fun CardDemo() {
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
     }
+      Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
           .fillMaxWidth()
-          .height(120.dp),
+          .height(115.dp),
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
@@ -154,9 +156,10 @@ fun CardDemo() {
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
       }
+      Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
           .fillMaxWidth()
-          .height(120.dp),
+          .height(115.dp),
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
@@ -164,17 +167,6 @@ fun CardDemo() {
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
           SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
       }
-      Row(modifier = Modifier
-          .fillMaxWidth()
-          .height(120.dp),
-          verticalAlignment = Alignment.Top,
-          horizontalArrangement  =  Arrangement.SpaceBetween
-      ){
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-      }
-
 
   }
 }

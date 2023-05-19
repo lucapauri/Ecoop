@@ -29,6 +29,11 @@ val Typography = Typography(
         fontFamily = InterFont,
         fontSize = 20.sp,
     ),
+    body2 = TextStyle(
+        fontFamily = InterFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    ),
     button = TextStyle(
         fontFamily = InterFont,
         fontWeight = FontWeight.Bold,
