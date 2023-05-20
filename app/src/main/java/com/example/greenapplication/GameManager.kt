@@ -102,6 +102,20 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val cO2 : LiveData<Map<String,String>> = mutableCO2
 
+    //Current sum of items per team
+    private val mutableSumItems = MutableLiveData<Map<String, Map<String,Int>>>().also {
+        var map : MutableMap<String, Map<String,Int>> = mutableMapOf<String, Map<String,Int>>()
+        teamNames.forEach{ team ->
+            var sum : MutableMap<String, Int> = mutableMapOf<String,Int>()
+            (1..items.size).forEach{ number ->
+                sum[number.toString()] = 0
+            }
+            map[team] = sum
+        }
+        it.value = map
+    }
+    val sumItems : LiveData<Map<String, Map<String,Int>>> = mutableSumItems
+
     //Current Happiness
     private val mutableHappiness = MutableLiveData<Map<String,String>>().also {
         var map : MutableMap<String,String> = mutableMapOf<String,String>()
@@ -280,6 +294,14 @@ class GameManager(private val scope:CoroutineScope) {
                             override fun onCancelled(error: DatabaseError) {
                             }
                         })
+                        //Listen sum items
+                        ref.child("teams").child(it).child("sumItems").addValueEventListener(object : ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                fetchSumItems(snapshot, it)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
                     }
                     //Listen Timer
                     ref.child("Timer").addValueEventListener(object : ValueEventListener{
@@ -292,6 +314,7 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+
                 } else {
                     mutableScreenName.value = ScreenName.Error("Invalid gameId")
                 }
@@ -355,10 +378,23 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    //Initialize sum items
+                    sumItems.value?.get(it)?.forEach { sum ->
+                        ref.child("teams").child(it).child("sumItems").child(sum.key).setValue(sum.value).await()
+                    }
+                    //Listen sum items
+                    ref.child("teams").child(it).child("sumItems").addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            fetchSumItems(snapshot, it)
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     //random items assignment
                     val squares = generateRandom(initialItems, 1, 9)
-                    generateRandom(initialItems, 1, 6).forEachIndexed{ index, it ->
-                        team.child(squares[index].toString()).setValue(it.toString())
+                    generateRandom(initialItems, 1, 6).forEachIndexed{ index, id ->
+                        team.child(squares[index].toString()).setValue(id.toString())
+                        updateSumItems(1,it,id)
                     }
                     //Initialize energy
                     ref.child("teams").child(it).child("Energy").setValue(initialEnergy.toString())
@@ -464,6 +500,37 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
+    fun fetchSumItems(snapshot: DataSnapshot, team : String){
+        val v = snapshot.value
+        Log.d("GameManager", snapshot.value.toString())
+        if(v!=null && v is Map<*, *>){
+            var map = mutableMapOf<String, Map<String,Int>>()
+            sumItems.value?.forEach{ item ->
+                if(item.key == team){
+                    map[item.key] = v as Map<String, Int>
+                }else
+                    map[item.key] = item.value
+            }
+            mutableSumItems.value = map
+            Log.d("GameManager", "enter")
+        }
+
+        }
+
+
+    private fun updateSumItems(increment : Int, team : String, id : Int){
+        scope.launch {
+            try{
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                ref.child("teams").child(team).child("sumItems").child(id.toString()).setValue(
+                    sumItems.value?.getValue(team)?.getValue(id.toString())?.plus(increment)
+                )
+            }catch (e : Exception){
+                mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+            }
+        }
+    }
+
     fun nextTurn(){
         scope.launch {
             try{
@@ -533,6 +600,7 @@ class GameManager(private val scope:CoroutineScope) {
         }
         val price = -items.first { it.id == id }.price
         updateEnergy(price, team)
+        updateSumItems(1, team, id)
     }
 
     fun deleteItem(team : String, square : Int){
@@ -547,6 +615,7 @@ class GameManager(private val scope:CoroutineScope) {
         val id = itemsTeams.value?.get(team)?.get(square.toString()) ?: ""
         val price = -(items.first { it.id == id.toInt() }.price)/2
         updateEnergy(price, team)
+        updateSumItems(-1, team, id.toInt())
     }
 
     fun formatTime(millis : Long) : List<Int>{
