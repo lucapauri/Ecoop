@@ -19,7 +19,7 @@ fun DashboardScreen(formatTime : (Long)->List<Int>,time : LiveData<Long> ,modifi
     GenericScreen(title = "Dashboard", modifier) {
         Column(modifier= Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.fillMaxHeight()){
-            Text(text = ms[0].toString() + ":" + ms[1].toString())
+                Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
             }
         }
 

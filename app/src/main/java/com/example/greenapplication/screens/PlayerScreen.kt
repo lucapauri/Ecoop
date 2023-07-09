@@ -12,12 +12,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import it.polito.did.gameskeleton.GameViewModel
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
-fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: String, nextTurn: ()-> Unit, addItem : (String, Int, Int)-> Unit, deleteItem : (String, Int) -> Unit, modifier: Modifier = Modifier) {
+fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: String,
+                 nextTurn: ()-> Unit, addItem : (String, Int, Int)-> Unit,
+                 deleteItem : (String, Int) -> Unit, vm: GameViewModel, modifier: Modifier = Modifier) {
     val timer = time.observeAsState()
-    val ms = formatTime(timer.value ?: 0)
+    val c = vm.cO2.observeAsState()
+    val CO2 = c.value?.get(team)
+    val h = vm.happiness.observeAsState()
+    val happiness = h.value?.get(team)
+    val e = vm.energy.observeAsState()
+    val energy = e.value?.get(team)
+    var ms = formatTime(timer.value ?: 0)
+    if(ms.isEmpty()){
+        ms = listOf(0,0)
+    }
     GenericScreen(title = "Player(${team})", modifier) {
 
     }
@@ -28,14 +41,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = ms[0].toString() + ":" + ms[1].toString())
-        Button(onClick = nextTurn)
-        { Text("Switch turn") }
-        Button(onClick = {addItem(team,1,1)}  )
-        { Text(text = "Add Item") }
-        Button(onClick = { deleteItem(team, 1) }) {
-            Text(text = "Remove Item")
-        }
+        Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
     }
 }
 
@@ -43,6 +49,6 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
 @Composable
 fun PreviewPlayerScreen() {
     GameSkeletonTheme {
-        //PlayerScreen(Long,"Team A",{},{ _: String, _: Int, _: Int -> }, {_ : String, _: Int ->})
+        PlayerScreen({ emptyList() }, MutableLiveData<Long>(),"Team A",{},{ _: String, _: Int, _: Int -> }, { _ : String, _: Int ->}, GameViewModel())
     }
 }

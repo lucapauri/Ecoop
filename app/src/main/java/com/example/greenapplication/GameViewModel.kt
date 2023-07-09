@@ -13,6 +13,8 @@ class GameViewModel: ViewModel() {
     fun addItem(team : String, id : Int, square : Int) = gameManager.addItem(team, id, square)
     fun deleteItem(team : String, square : Int) = gameManager.deleteItem(team, square)
     fun formatTime(millis : Long) = gameManager.formatTime(millis)
+    fun addMove(type : String, team : String, id : Int, square : Int) = gameManager.addMove(type, team, id, square)
+    fun voteMove(key : Int) = gameManager.voteMove(key)
 
     val players = gameManager.players
     val screenName = gameManager.screenName
@@ -23,5 +25,7 @@ class GameViewModel: ViewModel() {
     val happiness = gameManager.happiness
     val energy = gameManager.energy
     val timer = gameManager.timer
+    val voted = gameManager.voted
+    val moves = gameManager.moves
 
 }
