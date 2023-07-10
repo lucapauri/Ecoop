@@ -41,7 +41,7 @@ fun EliminaStruttura(infrastruttura: String){
             )
 
             androidx.compose.material.Text(
-                text = "Confermi di voler smantellare infrastruttura:",
+                text = "La tua proposta è smantellare infrastruttura:",
                 style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.onBackground,
                 textAlign = TextAlign.Center
