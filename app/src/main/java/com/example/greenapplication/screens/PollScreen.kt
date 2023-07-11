@@ -105,7 +105,7 @@ fun PollScreen(azioni: String, Name: String){
 fun PreviewPollScreen(){
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 2)
-        GridScreen(team = "Quartiere Rosso")
+        GridScreen(team = "Quartiere Rosso", 65, 70,25, listOf(0,0))
         PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
     }
 }

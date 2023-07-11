@@ -113,7 +113,7 @@ fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
 }
 
 @Composable
-fun SingleCard(res: Int, content: String ) {
+fun SingleCard(res: Int, content: String) {
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -172,7 +172,7 @@ fun CardDemo() {
 }
 
 @Composable
-fun GridScreen(team: String){
+fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>){
     Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text ( team,
@@ -188,20 +188,24 @@ fun GridScreen(team: String){
             color = MaterialTheme.colors.background,
             textAlign = TextAlign.Center)
         Spacer(Modifier.height(20.dp))
-        IconBar(percentCO2 = 65, percentHealth = 70, energyValue = 25)
+        IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
+        Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
         CardDemo()
     }
+}
+
+@Composable
+fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>){
+    MapScreen(SelectedIcon = 0)
+    GridScreen(team, CO2, health, energy, timer)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapScreen() {
     GameSkeletonTheme {
-
-        MapScreen(SelectedIcon = 0)
-        GridScreen(team = "Quartiere Rosso")
-
+        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0))
     }
 }
 

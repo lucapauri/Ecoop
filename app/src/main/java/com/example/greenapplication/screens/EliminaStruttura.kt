@@ -82,7 +82,7 @@ fun EliminaStruttura(infrastruttura: String){
 fun PreviewEliminaStruttura(){
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 0)
-        GridScreen(team = "Quartiere Rosso")
+        GridScreen(team = "Quartiere Rosso", 65, 70, 25, listOf(0,0))
         EliminaStruttura("Centrale geotermica")
     }
 }

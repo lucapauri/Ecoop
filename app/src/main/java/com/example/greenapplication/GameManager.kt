@@ -45,22 +45,38 @@ class GameManager(private val scope:CoroutineScope) {
                 mutableScreenName.value = ScreenName.Error(e.message?:"Unknown error")
             }
         }
-        items.add(Infrastruttura(1,"Parco",-4,4,5, 10,1,""))
-        items.add(Infrastruttura(2,"Bus",5,3,10,10,1,""))
-        items.add(Infrastruttura(3,"Centrale a carbone",15,1,30,10,1,""))
-        items.add(Infrastruttura(4,"Centrale a gas",13,2,28,10, 1,""))
-        items.add(Infrastruttura(5,"Impianto a biometano",12,3,25,10,1,""))
-        items.add(Infrastruttura(6,"Termovalorizzatore",4,-3,30,10, 1,""))
-        items.add(Infrastruttura(7,"Metropolitana",3,6,12,10,2,""))
-        items.add(Infrastruttura(8,"Area Verde",-8,8,8,10,2,""))
-        items.add(Infrastruttura(9,"Centrale idroelettrica",10,4,40,10,2,""))
-        items.add(Infrastruttura(10,"Centrale Geotermica",10,7,40,10,2,""))
-        items.add(Infrastruttura(11,"Centrale nucleare",5,2,40,10,2,""))
-        items.add(Infrastruttura(12,"Colonnine per auto elettriche",3,7,40,10,3,""))
-        items.add(Infrastruttura(13,"Orto Cittadino",-12,10,10,10,3,""))
-        items.add(Infrastruttura(14,"Pista ciclabile",0,8,8,10,3,""))
-        items.add(Infrastruttura(15,"Centrale eolica",5,2,3,10,3,""))
-        items.add(Infrastruttura(16,"Centrale fotovoltaica",4,30,40,10,3,""))
+        items.add(Infrastruttura(1,"Parco",-4,4,5, 10,1,
+            com.example.greenapplication.R.drawable.parco))
+        items.add(Infrastruttura(2,"Bus",5,3,10,10,1,
+            com.example.greenapplication.R.drawable.bus))
+        items.add(Infrastruttura(3,"Centrale a carbone",15,1,30,10,1,
+            com.example.greenapplication.R.drawable.carbone))
+        items.add(Infrastruttura(4,"Centrale a gas",13,2,28,10, 1,
+            com.example.greenapplication.R.drawable.centralegas))
+        items.add(Infrastruttura(5,"Impianto a biometano",12,3,25,10,1,
+            com.example.greenapplication.R.drawable.biometano))
+        items.add(Infrastruttura(6,"Termovalorizzatore",4,-3,30,10, 1,
+            com.example.greenapplication.R.drawable.biometano))
+        items.add(Infrastruttura(7,"Metropolitana",3,6,12,10,2,
+            com.example.greenapplication.R.drawable.metro))
+        items.add(Infrastruttura(8,"Area Verde",-8,8,8,10,2,
+            com.example.greenapplication.R.drawable.areaverde))
+        items.add(Infrastruttura(9,"Centrale idroelettrica",10,4,40,10,2,
+            com.example.greenapplication.R.drawable.idroelettrica))
+        items.add(Infrastruttura(10,"Centrale Geotermica",10,7,40,10,2,
+            com.example.greenapplication.R.drawable.geotermica))
+        items.add(Infrastruttura(11,"Centrale nucleare",5,2,40,10,2,
+            com.example.greenapplication.R.drawable.nucleare))
+        items.add(Infrastruttura(12,"Colonnine per auto elettriche",3,7,40,10,3,
+            com.example.greenapplication.R.drawable.colonnine))
+        items.add(Infrastruttura(13,"Orto Cittadino",-12,10,10,10,3,
+            com.example.greenapplication.R.drawable.orto))
+        items.add(Infrastruttura(14,"Pista ciclabile",0,8,8,10,3,
+            com.example.greenapplication.R.drawable.ciclabile))
+        items.add(Infrastruttura(15,"Centrale eolica",5,2,3,10,3,
+            com.example.greenapplication.R.drawable.eolica))
+        items.add(Infrastruttura(16,"Centrale fotovoltaica",4,30,40,10,3,
+            com.example.greenapplication.R.drawable.fotovoltaica))
     }
 
     //Current screen name

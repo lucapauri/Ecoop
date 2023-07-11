@@ -1,10 +1,8 @@
 package it.polito.did.gameskeleton.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.greenapplication.screens.mainPlayerScreen
 import it.polito.did.gameskeleton.GameViewModel
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -22,26 +21,17 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                  deleteItem : (String, Int) -> Unit, vm: GameViewModel, modifier: Modifier = Modifier) {
     val timer = time.observeAsState()
     val c = vm.cO2.observeAsState()
-    val CO2 = c.value?.get(team)
+    val CO2 = c.value?.get(team)?.toInt()?:0
     val h = vm.happiness.observeAsState()
-    val happiness = h.value?.get(team)
+    val happiness = h.value?.get(team)?.toInt()?:0
     val e = vm.energy.observeAsState()
-    val energy = e.value?.get(team)
+    val energy = e.value?.get(team)?.toInt()?:0
     var ms = formatTime(timer.value ?: 0)
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
-    GenericScreen(title = "Player(${team})", modifier) {
-
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
+    Scaffold(modifier = Modifier.fillMaxSize()) {
+        mainPlayerScreen(team = team, CO2 = CO2, health = happiness, energy = energy, timer = ms)
     }
 }
 
