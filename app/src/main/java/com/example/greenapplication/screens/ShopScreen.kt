@@ -272,6 +272,24 @@ class ShopScreen : ComponentActivity () {
 
         return list
     }
+
+
+    @Composable
+    fun Shop(){
+        Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
+
+            ValueScreen(title = "Quartiere Rosso")
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier = Modifier.height(150.dp))
+                TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,
+                // 2 -> 1 livello bloccato,
+                // 3 -> tutti i livello sbloccati
+                ContentView(Lista = createDataList()) //permette di passare una
+                // lista diversa a seconda del livello (blu, giallo, verde)
+            }
+
+        }
+    }
     
 
 
@@ -280,19 +298,7 @@ class ShopScreen : ComponentActivity () {
     fun PreviewShopScreen() {
         GameSkeletonTheme {
 
-            Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
-
-                ValueScreen(title = "Quartiere Rosso")
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Spacer(modifier = Modifier.height(150.dp))
-                    TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,
-                                                        // 2 -> 1 livello bloccato,
-                                                        // 3 -> tutti i livello sbloccati
-                    ContentView(Lista = createDataListVerde()) //permette di passare una
-                                            // lista diversa a seconda del livello (blu, giallo, verde)
-                }
-
-            }
+            Shop()
 
         }
     }

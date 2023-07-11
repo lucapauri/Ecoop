@@ -88,98 +88,120 @@ val strutture = listOf(
 @Composable
 fun DettaglioCarta(CardData: Struttura) {
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 150.dp, start = 15.dp, end = 15.dp)
-            .clickable { },
-        elevation = 10.dp
+    Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)},
     ) {
-        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 300.dp)) {
-            Icon(imageVector = Icons.Default.Close, "",
-                tint = Color.DarkGray)
-        }
+        ValueScreen(title = "Quartiere Rosso")
 
-        Column(
-            modifier = Modifier.padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally
+
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 150.dp, start = 15.dp, end = 15.dp)
+                .clickable { },
+            elevation = 10.dp
         ) {
-
-            Image(
-                painterResource(id = CardData.res),
-                contentDescription = CardData.content,
-                modifier = Modifier
-                    .padding(horizontal = 40.dp)
-                    .size(250.dp)
-                    .clip(shape = RoundedCornerShape(6.dp)))
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = CardData.name,
-                style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(start = 40.dp, end = 40.dp, bottom = 15.dp)
-            )
-            
-            Row(verticalAlignment = Alignment.CenterVertically){
-                
-                Icon(painter = painterResource(id = R.drawable.energy),
-                    contentDescription = "energy",
-                tint = Color.DarkGray,
-                    modifier = Modifier
-                        .size(35.dp)
-                        .padding(end = 2.dp)
+            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 300.dp)) {
+                Icon(
+                    imageVector = Icons.Default.Close, "",
+                    tint = Color.DarkGray
                 )
-                Text(text = CardData.energy.toString(),
-                    color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.subtitle2)
-                Spacer(modifier = Modifier.width(15.dp))
-
-                Icon(painter = painterResource(id = R.drawable.life),
-                    contentDescription = "energy",
-                    tint = Color.DarkGray,
-                    modifier = Modifier
-                        //.padding(start = 35.dp, end = 5.dp)
-                        .size(33.dp)
-                        .padding(end = 2.dp)
-                )
-                Text(text = CardData.qualitylife.toString(),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.subtitle2)
-                Spacer(modifier = Modifier.width(18.dp))
-
-                Icon(painter = painterResource(id = R.drawable.co2),
-                    contentDescription = "energy",
-                    tint = Color.DarkGray,
-                    modifier = Modifier
-                        // .padding(start = 35.dp, end = 5.dp)
-                        .size(35.dp)
-                        .padding(end = 3.dp)
-                )
-                Text(text = CardData.co2.toString(),
-                    color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.subtitle2)
-
             }
 
-            Text(
-                text = CardData.description,
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onBackground,
-                modifier = Modifier.padding(top = 15.dp)
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-            Button(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {}, shape = RoundedCornerShape(20.dp)
+            Column(
+                modifier = Modifier.padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                androidx.compose.material.Text("Acquista",
-                    style = MaterialTheme.typography.button,
-                    color = MaterialTheme.colors.background,
-                    modifier = Modifier.padding(horizontal = 80.dp))
-            }
 
+                Image(
+                    painterResource(id = CardData.res),
+                    contentDescription = CardData.content,
+                    modifier = Modifier
+                        .padding(horizontal = 40.dp)
+                        .size(250.dp)
+                        .clip(shape = RoundedCornerShape(6.dp))
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = CardData.name,
+                    style = MaterialTheme.typography.subtitle1,
+                    color = MaterialTheme.colors.onBackground,
+                    modifier = Modifier
+                        .padding(start = 40.dp, end = 40.dp, bottom = 15.dp)
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.energy),
+                        contentDescription = "energy",
+                        tint = Color.DarkGray,
+                        modifier = Modifier
+                            .size(35.dp)
+                            .padding(end = 2.dp)
+                    )
+                    Text(
+                        text = CardData.energy.toString(),
+                        color = MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.subtitle2
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.life),
+                        contentDescription = "energy",
+                        tint = Color.DarkGray,
+                        modifier = Modifier
+                            //.padding(start = 35.dp, end = 5.dp)
+                            .size(33.dp)
+                            .padding(end = 2.dp)
+                    )
+                    Text(
+                        text = CardData.qualitylife.toString(),
+                        color = MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.subtitle2
+                    )
+                    Spacer(modifier = Modifier.width(18.dp))
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.co2),
+                        contentDescription = "energy",
+                        tint = Color.DarkGray,
+                        modifier = Modifier
+                            // .padding(start = 35.dp, end = 5.dp)
+                            .size(35.dp)
+                            .padding(end = 3.dp)
+                    )
+                    Text(
+                        text = CardData.co2.toString(),
+                        color = MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.subtitle2
+                    )
+
+                }
+
+                Text(
+                    text = CardData.description,
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onBackground,
+                    modifier = Modifier.padding(top = 15.dp)
+                )
+
+                Spacer(modifier = Modifier.height(30.dp))
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = {}, shape = RoundedCornerShape(20.dp)
+                ) {
+                    androidx.compose.material.Text(
+                        "Acquista",
+                        style = MaterialTheme.typography.button,
+                        color = MaterialTheme.colors.background,
+                        modifier = Modifier.padding(horizontal = 80.dp)
+                    )
+                }
+
+            }
         }
     }
 }
@@ -192,11 +214,8 @@ fun DettaglioCarta(CardData: Struttura) {
 @Composable
 fun PreviewDettaglioCarta() {
     GameSkeletonTheme {
-        Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}, 
-        ) {
-            ValueScreen(title = "Quartiere Rosso")
-            DettaglioCarta(strutture.elementAt(0)) //Inserire l'indice dell'infrastruttura a seconda
+
+        DettaglioCarta(strutture.elementAt(0)) //Inserire l'indice dell'infrastruttura a seconda
                                                         // della carta che si vuole visualizzare
-        }
     }
 }
