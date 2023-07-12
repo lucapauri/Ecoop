@@ -26,7 +26,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val firebase = Firebase.database(URL)
     private val firebaseAuth = Firebase.auth
     private val teamNames = listOf("team1", "team2", "team3", "team4")
-    private val items : MutableList<Infrastruttura> = mutableListOf()
+    val items : MutableList<Infrastruttura> = mutableListOf()
     private val initialItems = 2
     private val initialEnergy = 50
     private val initialTime = 1800000
@@ -38,7 +38,6 @@ class GameManager(private val scope:CoroutineScope) {
         scope.launch {
             try {
                 firebaseAuth.signInAnonymously().await()
-                Log.d("GameManager", "Current User: ${firebaseAuth.uid}")
                 delay(500)
                 mutableScreenName.value = ScreenName.Initial
             } catch (e: Exception) {
@@ -208,8 +207,6 @@ class GameManager(private val scope:CoroutineScope) {
     }
 
     private fun getMyTeam(): String {
-        Log.d("GameManager", "players: ${players.value}")
-        Log.d("GameManager", "uid: ${firebaseAuth.uid}")
         return players.value?.get(firebaseAuth.uid) ?: ""
     }
 
@@ -218,7 +215,6 @@ class GameManager(private val scope:CoroutineScope) {
             try {
                 val ref = firebase.getReference("abc")
                 //val ref = firebase.reference.push()
-                Log.d("GameManager","Creating match ${ref.key}")
                 ref.setValue(
                     mapOf(
                         "date" to LocalDateTime.now().toString(),
@@ -226,7 +222,6 @@ class GameManager(private val scope:CoroutineScope) {
                         "screen" to "WaitingStart"
                     )
                 ).await()
-                Log.d("GameManager", "Match creation succeeded")
                 mutableMatchId.value = ref.key
                 mutableScreenName.value = ScreenName.SetupMatch(ref.key!!)
                 watchPlayers()
@@ -452,7 +447,6 @@ class GameManager(private val scope:CoroutineScope) {
                     ref.child("teams").child(it).child("Energy").setValue(initialEnergy.toString())
                 }
                 mutableScreenName.value = ScreenName.Dashboard
-                Log.d("GameManager", "Game started")
                 //Listen Timer
                 ref.child("Timer").addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -723,7 +717,6 @@ class GameManager(private val scope:CoroutineScope) {
 
     fun deleteItem(team : String, square : Int){
         val id = itemsTeams.value?.get(team)?.get(square.toString()) ?: ""
-        Log.d("GameManager", "$square $id")
         if(id != ""){
             scope.launch {
                 try {

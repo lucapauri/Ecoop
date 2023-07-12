@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.greenapplication.Infrastruttura
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -133,7 +134,7 @@ fun SingleCard(res: Int, content: String) {
     }
 }
 @Composable
-fun CardDemo() {
+fun CardDemo(items: Map<String, Infrastruttura>) {
   Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.Center
   ) {
       Spacer(modifier = Modifier.height(20.dp))
@@ -143,9 +144,9 @@ fun CardDemo() {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("1")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("2")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("3")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
     }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -154,9 +155,9 @@ fun CardDemo() {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("4")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("5")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("6")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
       }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -165,16 +166,16 @@ fun CardDemo() {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("7")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("8")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("9")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
       }
 
   }
 }
 
 @Composable
-fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>){
+fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>, items: Map<String, Infrastruttura>){
     Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text ( team,
@@ -193,24 +194,27 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
         IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
-        CardDemo()
+        CardDemo(items)
     }
 }
 
 @Composable
-fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>, navController: NavController, surveyOn : Boolean){
+fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
+                     navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>){
     if(surveyOn){
         navController.navigate("poll")
     }
     MapScreen(SelectedIcon = 0)
-    GridScreen(team, CO2, health, energy, timer)
+    GridScreen(team, CO2, health, energy, timer, items)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapScreen() {
     GameSkeletonTheme {
-        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0), navController = rememberNavController(), false)
+        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0),
+            navController = rememberNavController(), false, emptyMap()
+        )
     }
 }
 

@@ -1,5 +1,6 @@
 package it.polito.did.gameskeleton.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -14,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.greenapplication.Infrastruttura
 import com.example.greenapplication.screens.Poll
 import com.example.greenapplication.screens.mainPlayerScreen
 import it.polito.did.gameskeleton.GameViewModel
@@ -33,6 +35,12 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     var ms = formatTime(timer.value ?: 0)
     val survey = vm.surveyOn.observeAsState()
     val surveyOn = survey.value?:false
+    val i = vm.itemsTeams.observeAsState()
+    val infrastrutture = vm.items
+    Log.d("GameManager", "Prima " + i.value.toString())
+    val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
+        mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,String>()
+    Log.d("GameManager","Dopo: " + items.toString())
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
@@ -46,14 +54,18 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 energy = energy,
                 timer = ms,
                 navController,
-                surveyOn
+                surveyOn,
+                items as Map<String, Infrastruttura>
             )}
             composable("poll"){ Poll(
                 team = team,
                 CO2 = CO2,
                 health = happiness,
                 energy = energy,
-                timer = ms
+                timer = ms,
+                navController,
+                surveyOn,
+                items as Map<String, Infrastruttura>
             )}
         }
     }
