@@ -45,37 +45,53 @@ class GameManager(private val scope:CoroutineScope) {
             }
         }
         items.add(Infrastruttura(1,"Parco",-4,4,5, 10,1,
-            com.example.greenapplication.R.drawable.parco))
+            com.example.greenapplication.R.drawable.parco,
+            "Terreno pubblico con prati e piante." ))
         items.add(Infrastruttura(2,"Bus",5,3,10,10,1,
-            com.example.greenapplication.R.drawable.bus))
+            com.example.greenapplication.R.drawable.bus,
+        "Autoveicolo attrezzato per il trasporto collettivo di persone su percorsi urbani e suburbani"))
         items.add(Infrastruttura(3,"Centrale a carbone",15,1,30,10,1,
-            com.example.greenapplication.R.drawable.carbone))
+            com.example.greenapplication.R.drawable.carbone,
+            "Centrale termoelettrica che brucia carbone per generare energia elettrica."))
         items.add(Infrastruttura(4,"Centrale a gas",13,2,28,10, 1,
-            com.example.greenapplication.R.drawable.centralegas))
+            com.example.greenapplication.R.drawable.centralegas,
+            "Centrale termoelettrica che brucia gas naturale per generare energia elettrica."))
         items.add(Infrastruttura(5,"Impianto a biometano",12,3,25,10,1,
-            com.example.greenapplication.R.drawable.biometano))
+            com.example.greenapplication.R.drawable.biometano,
+        "Impianto alimentato a biogas che produce energia elettrica e termicapartire da materiali organici."))
         items.add(Infrastruttura(6,"Termovalorizzatore",4,-3,30,10, 1,
-            com.example.greenapplication.R.drawable.biometano))
+            com.example.greenapplication.R.drawable.biometano,
+        "Inceneritore che converte il calore generato dalla combustione dei rifiuti in energia destinata ad altro uso."))
         items.add(Infrastruttura(7,"Metropolitana",3,6,12,10,2,
-            com.example.greenapplication.R.drawable.metro))
+            com.example.greenapplication.R.drawable.metro,
+        "Mezzo di trasporto rapido collettivo costituito da una linea ferroviaria prevalentemente sotterranea, che consente spostamenti all'interno di una grande città."))
         items.add(Infrastruttura(8,"Area Verde",-8,8,8,10,2,
-            com.example.greenapplication.R.drawable.areaverde))
+            com.example.greenapplication.R.drawable.areaverde,
+        "Zona costituita da parchi, prati e giardini e situata nell'area urbana."))
         items.add(Infrastruttura(9,"Centrale idroelettrica",10,4,40,10,2,
-            com.example.greenapplication.R.drawable.idroelettrica))
+            com.example.greenapplication.R.drawable.idroelettrica,
+        "Centrale che trasforma l'energia idraulica di un corso d'acqua, naturale o artificiale, in energia elettrica rinnovabile."))
         items.add(Infrastruttura(10,"Centrale Geotermica",10,7,40,10,2,
-            com.example.greenapplication.R.drawable.geotermica))
+            com.example.greenapplication.R.drawable.geotermica,
+        "Centrale termoelettrica che produce energia elettrica utilizzando come fonte di energia primaria l'energia geotermica ovvero il calore proveniente dalle profondità della Terra."))
         items.add(Infrastruttura(11,"Centrale nucleare",5,2,40,10,2,
-            com.example.greenapplication.R.drawable.nucleare))
+            com.example.greenapplication.R.drawable.nucleare,
+        "Centrale che produce energia elettrica sfruttando il calore generato dalle reazioni nucleari."))
         items.add(Infrastruttura(12,"Colonnine per auto elettriche",3,7,40,10,3,
-            com.example.greenapplication.R.drawable.colonnine))
+            com.example.greenapplication.R.drawable.colonnine,
+        "Dispositivi di distribuzione dell'energia elettrica, attraverso il quale è possibile ricaricare la batteria di autoveicoli elettrici."))
         items.add(Infrastruttura(13,"Orto Cittadino",-12,10,10,10,3,
-            com.example.greenapplication.R.drawable.orto))
+            com.example.greenapplication.R.drawable.orto,
+        "Spazio verde di dimensione variabile e generalmente di proprietà comunale che viene affidato a cittadini o associazioni per la produzione di erbe aromatiche, frutta, verdura e fiori."))
         items.add(Infrastruttura(14,"Pista ciclabile",0,8,8,10,3,
-            com.example.greenapplication.R.drawable.ciclabile))
+            com.example.greenapplication.R.drawable.ciclabile,
+        "Percorso riservato alle biciclette, dove il traffico motorizzato è escluso."))
         items.add(Infrastruttura(15,"Centrale eolica",5,2,3,10,3,
-            com.example.greenapplication.R.drawable.eolica))
+            com.example.greenapplication.R.drawable.eolica,
+        "Aree territoriali in cui sono state concentrate diverse turbine eoliche di grandi dimensioni che producono energia elettrica."))
         items.add(Infrastruttura(16,"Centrale fotovoltaica",4,30,40,10,3,
-            com.example.greenapplication.R.drawable.fotovoltaica))
+            com.example.greenapplication.R.drawable.fotovoltaica,
+        "Centrale che immagazzina l'energia solare attraverso dei pannelli solari per produrre energia elettrica."))
     }
 
     //Current screen name

@@ -21,6 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.greenapplication.Infrastruttura
 import com.example.greenapplication.R
 import com.google.relay.compose.BoxScopeInstanceImpl.align
 import it.polito.did.gameskeleton.screens.GenericScreen
@@ -36,7 +39,7 @@ val strutture = listOf(
     description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
     Struttura("Centrale a Carbone", 15, 2, 8,
         res = com.example.greenapplication.R.drawable.carbone, content = "carbone",
-        description = "Un centrale a carbone è una centrale termoelettrica che brucia carbone per generare energia elettrica."),
+        description = "Una centrale a carbone è una centrale termoelettrica che brucia carbone per generare energia elettrica."),
     Struttura("Bus", 15, 2, 8,
         res = com.example.greenapplication.R.drawable.bus, content = "bus",
         description = "Una centrale a gas è una centrale termoelettrica che brucia gas naturale per generare energia elettrica."),
@@ -86,11 +89,22 @@ val strutture = listOf(
 
 
 @Composable
-fun DettaglioCarta(CardData: Struttura) {
+fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
+                   navController: NavController, surveyOn : Boolean,
+                        team : String, CO2 : Int, health : Int, energy: Int) {
 
+    if(surveyOn){
+        navController.navigate("poll")
+    }
+    var text = ""
+    if(square != 0){
+        text = "Smantella"
+    }else{
+        text = "Acquista"
+    }
     Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)},
     ) {
-        ValueScreen(title = "Quartiere Rosso")
+        ValueScreen(team, CO2, health, energy)
 
 
 
@@ -101,7 +115,13 @@ fun DettaglioCarta(CardData: Struttura) {
                 .clickable { },
             elevation = 10.dp
         ) {
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 300.dp)) {
+            IconButton(onClick = {
+                if(square != 0){
+                    navController.navigate("main")
+                }else{
+                    navController.navigate("shop")
+                }
+            }, modifier = Modifier.padding(start = 300.dp)) {
                 Icon(
                     imageVector = Icons.Default.Close, "",
                     tint = Color.DarkGray
@@ -114,17 +134,17 @@ fun DettaglioCarta(CardData: Struttura) {
             ) {
 
                 Image(
-                    painterResource(id = CardData.res),
-                    contentDescription = CardData.content,
+                    painterResource(id = CardData.imageId),
+                    contentDescription = CardData.nome,
                     modifier = Modifier
                         .padding(horizontal = 40.dp)
-                        .size(250.dp)
+                        .size(200.dp)
                         .clip(shape = RoundedCornerShape(6.dp))
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = CardData.name,
+                    text = CardData.nome,
                     style = MaterialTheme.typography.subtitle1,
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier
@@ -158,7 +178,7 @@ fun DettaglioCarta(CardData: Struttura) {
                             .padding(end = 2.dp)
                     )
                     Text(
-                        text = CardData.qualitylife.toString(),
+                        text = CardData.happiness.toString(),
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.subtitle2
                     )
@@ -174,7 +194,7 @@ fun DettaglioCarta(CardData: Struttura) {
                             .padding(end = 3.dp)
                     )
                     Text(
-                        text = CardData.co2.toString(),
+                        text = CardData.CO2.toString(),
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.subtitle2
                     )
@@ -194,7 +214,7 @@ fun DettaglioCarta(CardData: Struttura) {
                     onClick = {}, shape = RoundedCornerShape(20.dp)
                 ) {
                     androidx.compose.material.Text(
-                        "Acquista",
+                        text,
                         style = MaterialTheme.typography.button,
                         color = MaterialTheme.colors.background,
                         modifier = Modifier.padding(horizontal = 80.dp)
@@ -215,7 +235,12 @@ fun DettaglioCarta(CardData: Struttura) {
 fun PreviewDettaglioCarta() {
     GameSkeletonTheme {
 
-        DettaglioCarta(strutture.elementAt(0)) //Inserire l'indice dell'infrastruttura a seconda
+        DettaglioCarta(
+            Infrastruttura(1,"Parco",-4,4,5, 10,1,
+                com.example.greenapplication.R.drawable.parco, "Aooooo"), 1,
+            navController = rememberNavController(), false, "team1", 65,
+            70, 25
+        ) //Inserire l'indice dell'infrastruttura a seconda
                                                         // della carta che si vuole visualizzare
     }
 }

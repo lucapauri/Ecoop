@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
 import com.example.greenapplication.pag1.Text
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
@@ -82,7 +83,8 @@ fun EliminaStruttura(infrastruttura: String){
 fun PreviewEliminaStruttura(){
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 0)
-        GridScreen(team = "Quartiere Rosso", 65, 70, 25, listOf(0,0), emptyMap())
+        GridScreen(team = "Quartiere Rosso", 65, 70, 25, listOf(0,0), emptyMap(),
+        navController = rememberNavController())
         EliminaStruttura("Centrale geotermica")
     }
 }

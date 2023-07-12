@@ -4,6 +4,7 @@ package com.example.greenapplication.screens
 
 import android.accounts.AuthenticatorDescription
 import android.net.wifi.aware.AwareResources
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -116,11 +117,17 @@ fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
 }
 
 @Composable
-fun SingleCard(res: Int, content: String) {
+fun SingleCard(res: Int, content: String, square : Int, navController: NavController, id : Int) {
     Card(
         modifier = Modifier
             .padding(5.dp)
-            .clickable { },
+            .clickable(
+                onClick = {
+                    if(id != 0){
+                        navController.navigate("detailCard?cardId=${id}&squareId=${square}")
+                    }
+                }
+            ),
         elevation = 10.dp
     ) {
         Column(
@@ -134,7 +141,7 @@ fun SingleCard(res: Int, content: String) {
     }
 }
 @Composable
-fun CardDemo(items: Map<String, Infrastruttura>) {
+fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
   Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.Center
   ) {
       Spacer(modifier = Modifier.height(20.dp))
@@ -144,9 +151,12 @@ fun CardDemo(items: Map<String, Infrastruttura>) {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = items?.get("1")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("2")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("3")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("1")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 1, navController, items?.get("1")?.id?:0)
+          SingleCard(res = items?.get("2")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 2, navController, items?.get("2")?.id?:0)
+          SingleCard(res = items?.get("3")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 3, navController, items?.get("3")?.id?:0)
     }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -155,9 +165,12 @@ fun CardDemo(items: Map<String, Infrastruttura>) {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = items?.get("4")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("5")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("6")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("4")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 4, navController, items?.get("4")?.id?:0)
+          SingleCard(res = items?.get("5")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 5, navController, items?.get("5")?.id?:0)
+          SingleCard(res = items?.get("6")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 6, navController, items?.get("6")?.id?:0)
       }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -166,16 +179,20 @@ fun CardDemo(items: Map<String, Infrastruttura>) {
           verticalAlignment = Alignment.Top,
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
-          SingleCard(res = items?.get("7")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("8")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
-          SingleCard(res = items?.get("9")?.imageId?: com.example.greenapplication.R.drawable.logo, content = "logo")
+          SingleCard(res = items?.get("7")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 7, navController, items?.get("7")?.id?:0)
+          SingleCard(res = items?.get("8")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 8, navController, items?.get("8")?.id?:0)
+          SingleCard(res = items?.get("9")?.imageId?: com.example.greenapplication.R.drawable.logo,
+              content = "logo", 9, navController, items?.get("9")?.id?:0)
       }
 
   }
 }
 
 @Composable
-fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>, items: Map<String, Infrastruttura>){
+fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>,
+               items: Map<String, Infrastruttura>, navController: NavController){
     Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text ( team,
@@ -194,7 +211,7 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
         IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
-        CardDemo(items)
+        CardDemo(items, navController)
     }
 }
 
@@ -205,7 +222,7 @@ fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer
         navController.navigate("poll")
     }
     MapScreen(SelectedIcon = 0)
-    GridScreen(team, CO2, health, energy, timer, items)
+    GridScreen(team, CO2, health, energy, timer, items, navController)
 }
 
 @Preview(showBackground = true)

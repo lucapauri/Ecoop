@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -108,7 +109,7 @@ fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>
         navController.navigate("main")
     }
     MapScreen(SelectedIcon = 2)
-    GridScreen(team = team, CO2, health,energy, timer, items)
+    GridScreen(team = team, CO2, health,energy, timer, items, navController)
     PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
 }
 
@@ -117,7 +118,8 @@ fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>
 fun PreviewPollScreen(){
     GameSkeletonTheme {
         MapScreen(SelectedIcon = 2)
-        GridScreen(team = "Quartiere Rosso", 65, 70,25, listOf(0,0), emptyMap())
+        GridScreen(team = "Quartiere Rosso", 65, 70,25, listOf(0,0), emptyMap(),
+            navController = rememberNavController())
         PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
     }
 }

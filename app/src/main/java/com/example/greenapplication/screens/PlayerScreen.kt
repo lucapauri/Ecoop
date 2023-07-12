@@ -15,8 +15,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.screens.DettaglioCarta
 import com.example.greenapplication.screens.Poll
+import com.example.greenapplication.screens.ShopScreen
 import com.example.greenapplication.screens.mainPlayerScreen
 import it.polito.did.gameskeleton.GameViewModel
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
@@ -37,10 +40,8 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val surveyOn = survey.value?:false
     val i = vm.itemsTeams.observeAsState()
     val infrastrutture = vm.items
-    Log.d("GameManager", "Prima " + i.value.toString())
     val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
         mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,String>()
-    Log.d("GameManager","Dopo: " + items.toString())
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
@@ -67,6 +68,22 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 surveyOn,
                 items as Map<String, Infrastruttura>
             )}
+            composable("detailCard?cardId={cardId}&squareId={squareId}",
+                arguments = listOf(
+                    navArgument("squareId") { defaultValue = 0 },
+                    navArgument("cardId") {defaultValue = 0}
+                )){backStackEntry ->
+                val cardId = backStackEntry?.arguments?.getInt("cardId")?:1
+                val squareId = backStackEntry?.arguments?.getInt("squareId")?:1
+                val card = infrastrutture.find { it.id == cardId }
+                if (card != null) {
+                    DettaglioCarta(CardData = card, squareId, navController, surveyOn,
+                    team, CO2, happiness, energy)
+                }
+            }
+            composable("shop"){
+                ShopScreen()
+            }
         }
     }
 }

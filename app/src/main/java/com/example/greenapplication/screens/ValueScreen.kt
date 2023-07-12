@@ -25,6 +25,9 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 @Composable
 fun ValueScreen(
     title: String,
+    CO2 : Int,
+    health : Int,
+    energy : Int,
     modifier: Modifier = Modifier,
     content: @Composable() () -> Unit = {}
 )
@@ -62,7 +65,7 @@ fun ValueScreen(
                 textAlign = TextAlign.Center)
 
             Spacer(Modifier.height(20.dp))
-            IconBar(percentCO2 = 65, percentHealth = 70, energyValue = 25)
+            IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
             Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
             content()
         }
@@ -73,6 +76,6 @@ fun ValueScreen(
 @Composable
 fun PreviewValueScreen() {
     GameSkeletonTheme {
-        ValueScreen(title = "Valori Screen")
+        ValueScreen(title = "Valori Screen", 65, 70 ,25)
     }
 }

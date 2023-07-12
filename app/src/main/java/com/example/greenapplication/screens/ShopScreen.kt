@@ -278,7 +278,7 @@ class ShopScreen : ComponentActivity () {
     fun Shop(){
         Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
 
-            ValueScreen(title = "Quartiere Rosso")
+            ValueScreen(title = "Quartiere Rosso", 65, 70, 25)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(150.dp))
                 TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,
@@ -297,9 +297,7 @@ class ShopScreen : ComponentActivity () {
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-
             Shop()
-
         }
     }
 }
