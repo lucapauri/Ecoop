@@ -1,6 +1,7 @@
 package com.example.greenapplication.screens
 
 import android.accounts.AuthenticatorDescription
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.Mossa
 import com.example.greenapplication.R
 import com.google.relay.compose.BoxScopeInstanceImpl.align
 import it.polito.did.gameskeleton.screens.GenericScreen
@@ -91,7 +93,8 @@ val strutture = listOf(
 @Composable
 fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                    navController: NavController, surveyOn : Boolean,
-                        team : String, CO2 : Int, health : Int, energy: Int) {
+                        team : String, CO2 : Int, health : Int, energy: Int,
+                            setMossa : (Mossa) -> Unit) {
 
     if(surveyOn){
         navController.navigate("poll")
@@ -211,7 +214,14 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                 Spacer(modifier = Modifier.height(30.dp))
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {}, shape = RoundedCornerShape(20.dp)
+                    onClick = {
+                      if(square != 0){
+                          setMossa(Mossa("A","delete", team, CardData.id, square, 0))
+                          navController.navigate("confirm")
+                      }else{
+
+                      }
+                    }, shape = RoundedCornerShape(20.dp)
                 ) {
                     androidx.compose.material.Text(
                         text,
@@ -240,7 +250,7 @@ fun PreviewDettaglioCarta() {
                 com.example.greenapplication.R.drawable.parco, "Aooooo"), 1,
             navController = rememberNavController(), false, "team1", 65,
             70, 25
-        ) //Inserire l'indice dell'infrastruttura a seconda
+        ) { _: Mossa -> } //Inserire l'indice dell'infrastruttura a seconda
                                                         // della carta che si vuole visualizzare
     }
 }

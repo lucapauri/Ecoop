@@ -17,13 +17,53 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.Mossa
 import com.example.greenapplication.pag1.Text
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
-fun EliminaStruttura(infrastruttura: String){
+fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
+                     infrastrutture : List<Infrastruttura>,
+                     setMossa : (Mossa) -> Unit,
+                     addMove : (String, String, Int, Int) -> Unit,
+                     navController: NavController
+                     ){
+    var text1 = ""
+    var text2 = ""
+    var text3 = ""
+    when(mossa.type){
+        "add" -> {
+            text1 = "Costruire"
+            text2 = "La tua proposta è costruire:"
+            val i = infrastrutture.find { it.id == mossa.id }
+            if (i != null) {
+                text3 = i.nome
+            }
+        }
+        "delete" -> {
+            text1 = "Smantellare"
+            text2 = "La tua proposta è smantellare:"
+            val i = items[mossa.square.toString()]
+            if (i != null) {
+                text3 = i.nome
+            }
+        }
+        "replace" -> {
+            text1 = "Sostituire"
+            text2 = "La tua proposta è smantellare e costruire rispettivamente:"
+            val i = infrastrutture.find { it.id == mossa.id }
+            if (i != null) {
+                text3 = i.nome + " "
+            }
+            val i1 = items[mossa.square.toString()]
+            if (i1 != null) {
+                text3 += i1.nome
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,20 +75,20 @@ fun EliminaStruttura(infrastruttura: String){
             modifier = Modifier.padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally
         ){
             androidx.compose.material.Text(
-                text = "Smantellare",
+                text = text1,
                 style = MaterialTheme.typography.subtitle1,
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
 
             androidx.compose.material.Text(
-                text = "La tua proposta è smantellare infrastruttura:",
+                text = text2,
                 style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.onBackground,
                 textAlign = TextAlign.Center
             )
             androidx.compose.material.Text(
-                text = "${infrastruttura}?",
+                text = text3,
                 style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.onBackground,
                 textAlign = TextAlign.Center
@@ -56,7 +96,10 @@ fun EliminaStruttura(infrastruttura: String){
 
 
             Row() {
-                Button(onClick = { /*TODO*/ },
+                Button(onClick = {
+                     setMossa(Mossa("","", "", 0, 0,0))
+                     navController.navigate("main")
+                },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                     modifier = Modifier.padding(25.dp)) {
@@ -64,7 +107,11 @@ fun EliminaStruttura(infrastruttura: String){
                     Icon(imageVector = Icons.Default.Close, "",
                         tint = Color.White)
                 }
-                Button(onClick = { /*TODO*/ },
+                Button(onClick = {
+                    addMove(mossa.type, mossa.team, mossa.id, mossa.square)
+                    setMossa(Mossa("", "", "", 0, 0,0))
+                    navController.navigate("main")
+                },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
                     modifier = Modifier.padding(25.dp)) {
@@ -77,14 +124,24 @@ fun EliminaStruttura(infrastruttura: String){
     }
 }
 
+@Composable
+fun ConfermaMossa(team : String, CO2 : Int, health : Int, energy : Int,
+                  timer : List<Int>, items : Map<String, Infrastruttura>,
+                  navController: NavController, mossa : Mossa, infrastrutture : List<Infrastruttura>,
+                  setMossa : (Mossa)->Unit, addMove: (String, String, Int, Int) -> Unit
+){
+    MapScreen(SelectedIcon = 0)
+    GridScreen(team, CO2, health, energy, timer, items, navController)
+    EliminaStruttura(mossa, items, infrastrutture, setMossa, addMove, navController)
+}
 
 @Preview
 @Composable
 fun PreviewEliminaStruttura(){
     GameSkeletonTheme {
-        MapScreen(SelectedIcon = 0)
-        GridScreen(team = "Quartiere Rosso", 65, 70, 25, listOf(0,0), emptyMap(),
-        navController = rememberNavController())
-        EliminaStruttura("Centrale geotermica")
+        ConfermaMossa("team1", 65, 70, 25, listOf(0,0),
+        emptyMap(), rememberNavController(), Mossa("", "", "", 0, 0, 0),
+            emptyList(), { _: Mossa -> }
+        ) { _: String, _: String, _: Int, _: Int -> }
     }
 }

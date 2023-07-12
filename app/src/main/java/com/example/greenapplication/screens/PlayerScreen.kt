@@ -7,6 +7,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,11 +19,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.greenapplication.Infrastruttura
-import com.example.greenapplication.screens.DettaglioCarta
-import com.example.greenapplication.screens.Poll
-import com.example.greenapplication.screens.ShopScreen
-import com.example.greenapplication.screens.mainPlayerScreen
+import com.example.greenapplication.Mossa
+import com.example.greenapplication.screens.*
 import it.polito.did.gameskeleton.GameViewModel
+import it.polito.did.gameskeleton.ScreenName
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
@@ -46,6 +47,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
         ms = listOf(0,0)
     }
     val navController = rememberNavController()
+    var (mossa, setMossa) = remember{ mutableStateOf(Mossa("","", "", 0, 0, 0)) }
     Scaffold(modifier = Modifier.fillMaxSize()) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main"){ mainPlayerScreen(
@@ -78,11 +80,15 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 val card = infrastrutture.find { it.id == cardId }
                 if (card != null) {
                     DettaglioCarta(CardData = card, squareId, navController, surveyOn,
-                    team, CO2, happiness, energy)
+                    team, CO2, happiness, energy, setMossa)
                 }
             }
             composable("shop"){
                 ShopScreen()
+            }
+            composable("confirm"){
+                ConfermaMossa(team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
+                    navController, mossa , infrastrutture, setMossa, vm::addMove)
             }
         }
     }
