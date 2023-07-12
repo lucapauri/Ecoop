@@ -99,6 +99,12 @@ fun PollScreen(azioni: String, Name: String){
         } */
 }
 
+@Composable
+fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>){
+    MapScreen(SelectedIcon = 2)
+    GridScreen(team = team, CO2, health,energy, timer)
+    PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
+}
 
 @Preview
 @Composable

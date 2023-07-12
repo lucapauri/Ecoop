@@ -27,5 +27,6 @@ class GameViewModel: ViewModel() {
     val timer = gameManager.timer
     val voted = gameManager.voted
     val moves = gameManager.moves
+    val surveyOn = gameManager.surveyOn
 
 }

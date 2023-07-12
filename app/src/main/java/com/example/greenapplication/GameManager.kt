@@ -167,7 +167,7 @@ class GameManager(private val scope:CoroutineScope) {
         it.value = false
     }
 
-    private val surveyOn : LiveData<Boolean> = mutableSurveyOn
+    val surveyOn : LiveData<Boolean> = mutableSurveyOn
 
     private fun assignTeam(players: Map<String,String>): Map<String,String>? {
         val teams = players.keys.groupBy { players[it].toString() }

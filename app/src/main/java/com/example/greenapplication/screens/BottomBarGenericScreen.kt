@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -196,7 +198,10 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
 }
 
 @Composable
-fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>){
+fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>, navController: NavController, surveyOn : Boolean){
+    if(surveyOn){
+        navController.navigate("poll")
+    }
     MapScreen(SelectedIcon = 0)
     GridScreen(team, CO2, health, energy, timer)
 }
@@ -205,7 +210,7 @@ fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer
 @Composable
 fun PreviewMapScreen() {
     GameSkeletonTheme {
-        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0))
+        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0), navController = rememberNavController(), false)
     }
 }
 

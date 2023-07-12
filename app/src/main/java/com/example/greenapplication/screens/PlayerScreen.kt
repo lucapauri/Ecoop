@@ -11,6 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.greenapplication.screens.Poll
 import com.example.greenapplication.screens.mainPlayerScreen
 import it.polito.did.gameskeleton.GameViewModel
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
@@ -27,11 +31,31 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val e = vm.energy.observeAsState()
     val energy = e.value?.get(team)?.toInt()?:0
     var ms = formatTime(timer.value ?: 0)
+    val survey = vm.surveyOn.observeAsState()
+    val surveyOn = survey.value?:false
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
+    val navController = rememberNavController()
     Scaffold(modifier = Modifier.fillMaxSize()) {
-        mainPlayerScreen(team = team, CO2 = CO2, health = happiness, energy = energy, timer = ms)
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main"){ mainPlayerScreen(
+                team = team,
+                CO2 = CO2,
+                health = happiness,
+                energy = energy,
+                timer = ms,
+                navController,
+                surveyOn
+            )}
+            composable("poll"){ Poll(
+                team = team,
+                CO2 = CO2,
+                health = happiness,
+                energy = energy,
+                timer = ms
+            )}
+        }
     }
 }
 
