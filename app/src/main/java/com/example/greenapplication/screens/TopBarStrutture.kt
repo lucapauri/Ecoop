@@ -1,5 +1,6 @@
 package com.example.greenapplication.screens
 
+import android.graphics.Color.GRAY
 import android.widget.Toast
 import androidx.annotation.ContentView
 import androidx.compose.foundation.background
@@ -9,10 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
@@ -37,8 +35,8 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
 fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->Unit,
-               navController: NavController, team : String){
-    val contextForToast = LocalContext.current.applicationContext
+               navController: NavController, team : String, turn : String){
+    val isTurn = team == turn
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -71,8 +69,15 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
                 }
                              },
                 modifier = Modifier.shadow(8.dp),
-                enabled = (SelectedIcon > 1 )) {
-                    Icon(imageVector = Icons.Default.Star,"Livello 1",
+                enabled = isTurn || SelectedIcon > 1
+            ) {
+                    Icon(imageVector =
+                    if(SelectedIcon>1){
+                        Icons.Default.Star
+                    }else{
+                         Icons.Default.Lock
+                         }
+                        ,"Livello 1",
                         modifier = Modifier.size(30.dp),
                         tint = Color(0xffe4b90b))
                 }
@@ -90,8 +95,15 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
                 }
             },
                 modifier = Modifier.shadow(8.dp),
-                enabled= (SelectedIcon > 2 )) {
-                    Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp),
+                enabled= (isTurn && SelectedIcon > 1) || SelectedIcon > 2
+            ) {
+                    Icon(imageVector =
+                    if(SelectedIcon>2){
+                        Icons.Default.Star
+                    }else{
+                        Icons.Default.Lock
+                    }
+                        ,"Livello 1", modifier = Modifier.size(30.dp),
                         tint = Color(0xff66ae27))
                 }
                 Spacer(Modifier.height(3.dp))
@@ -108,7 +120,7 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
 @Composable
 fun PreviewTopBar(){
     GameSkeletonTheme() {
-        TopBarShop(SelectedIcon = 3,{ _: Int -> },{_:Mossa->}, rememberNavController(), "")
+        TopBarShop(SelectedIcon = 3,{ _: Int -> },{_:Mossa->}, rememberNavController(), "", "")
         ContentView()
     }
 }

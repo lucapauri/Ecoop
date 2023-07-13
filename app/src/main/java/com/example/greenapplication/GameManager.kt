@@ -95,12 +95,22 @@ class GameManager(private val scope:CoroutineScope) {
         "Centrale che immagazzina l'energia solare attraverso dei pannelli solari per produrre energia elettrica."))
     }
 
-    var winningTeam = ""
+    private val mutableWinningTeam = MutableLiveData<String>().also {
+        it.value = ""
+    }
+    val winningTeam: LiveData<String> = mutableWinningTeam
+
 
     val winningTreshold = 30
 
     //Current items level
-    private val mutableItemsLevel = MutableLiveData<Map<String, Int>>()
+    private val mutableItemsLevel = MutableLiveData<Map<String, Int>>().also {
+        var m = mutableMapOf<String, Int>()
+        teamNames.forEach{t->
+            m[t] = 1
+        }
+        it.value = m
+    }
     val itemsLevel: LiveData<Map<String, Int>> = mutableItemsLevel
 
     //Current screen name
@@ -277,6 +287,7 @@ class GameManager(private val scope:CoroutineScope) {
         return when (name) {
             "WaitingStart" -> ScreenName.WaitingStart
             "Playing" -> ScreenName.Playing(getMyTeam())
+            "End" -> ScreenName.End(winningTeam?.value?:"")
             else -> ScreenName.Error("Unknown screen $name")
         }
     }
@@ -315,7 +326,7 @@ class GameManager(private val scope:CoroutineScope) {
                                 if(snapshot.value != null){
                                     mutableItemsLevel.value = mutableItemsLevel.value?.mapValues { m->
                                         if(m.key == it ){
-                                            snapshot.value as Int
+                                            snapshot.value.toString().toInt()
                                         }else{
                                             m.value
                                         }
@@ -396,6 +407,17 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    //Listen winning team
+                    ref.child("winningTeam").addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val v = snapshot.value
+                            if (v!=null) {
+                                mutableWinningTeam.value = v.toString()
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     //Listen moves
                     ref.child("moves").addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -450,7 +472,7 @@ class GameManager(private val scope:CoroutineScope) {
                             if(snapshot.value != null){
                                 mutableItemsLevel.value = mutableItemsLevel.value?.mapValues { m->
                                     if(m.key == it ){
-                                        snapshot.value as Int
+                                        snapshot.value.toString().toInt()
                                     }else{
                                         m.value
                                     }
@@ -469,7 +491,18 @@ class GameManager(private val scope:CoroutineScope) {
                             ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
                             updateSumItems(it)
                             if(sumHappiness(it).toInt() - sumCO2(it).toInt() > winningTreshold){
-                                winningTeam = it
+                                ref.child("winningTeam").setValue(it)
+                                ref.child("screen").addValueEventListener(
+                                    object: ValueEventListener {
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            mutableScreenName.value = getScreenName(snapshot.value?.toString()?: "")
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            mutableScreenName.value = ScreenName.Error(error.message)
+                                        }
+                                    }
+                                )
                                 ref.child("screen").setValue("End")
                             }
                         }
@@ -515,9 +548,8 @@ class GameManager(private val scope:CoroutineScope) {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if(snapshot.value != null){
                             mutableTimer.value = snapshot.value as Long
-                            if(mutableTimer?.value?:0 == 0.toLong()){
+                            if(mutableTimer?.value?:0 <= 0.toLong()){
                                 endGame()
-                                ref.child("screen").setValue("End")
                             }
                         }
                     }
@@ -527,6 +559,17 @@ class GameManager(private val scope:CoroutineScope) {
                 })
                 //Create Timer
                 startTimer(ref)
+                //Listen winning team
+                ref.child("winningTeam").addValueEventListener(object:ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val v = snapshot.value
+                        if (v!=null) {
+                            mutableWinningTeam.value = v.toString()
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
                 //Listen action points change
                 ref.child("actionPoints").addValueEventListener(object:ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -608,7 +651,25 @@ class GameManager(private val scope:CoroutineScope) {
             val sum = happiness - co2
             m[it] = sum
         }
-        winningTeam = m.maxByOrNull { it.value }?.key?: ""
+        val win = m.maxByOrNull { it.value }?.key?: ""
+        try{
+            val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+            ref.child("winningTeam").setValue(win)
+            ref.child("screen").addValueEventListener(
+                object: ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        mutableScreenName.value = getScreenName(snapshot.value?.toString()?: "")
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        mutableScreenName.value = ScreenName.Error(error.message)
+                    }
+                }
+            )
+            ref.child("screen").setValue("End")
+        }catch (e : Exception){
+            mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+        }
     }
 
     private fun move(move : Mossa){

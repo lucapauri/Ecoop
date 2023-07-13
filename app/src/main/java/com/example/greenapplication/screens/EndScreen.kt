@@ -1,5 +1,6 @@
 package com.example.greenapplication.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,6 +31,7 @@ private val teamNames = listOf("Team 1", "Team 2", "Team 3", "Team 4")
 fun EndScreen(teamNames: String,
               modifier: Modifier = Modifier)
 {
+    Log.d("GameManager", teamNames)
     Box(
         modifier = Modifier
             .background(color = MaterialTheme.colors.background)

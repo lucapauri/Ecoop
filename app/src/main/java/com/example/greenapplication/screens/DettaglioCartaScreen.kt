@@ -94,7 +94,7 @@ val strutture = listOf(
 fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                    navController: NavController, surveyOn : Boolean,
                         team : String, CO2 : Int, health : Int, energy: Int,
-                            setMossa : (Mossa) -> Unit) {
+                            turn : String, setMossa : (Mossa) -> Unit) {
 
     if(surveyOn){
         navController.navigate("poll")
@@ -220,7 +220,9 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                       }else{
 
                       }
-                    }, shape = RoundedCornerShape(20.dp)
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    enabled = team == turn
                 ) {
                     androidx.compose.material.Text(
                         text,
@@ -248,7 +250,7 @@ fun PreviewDettaglioCarta() {
             Infrastruttura(1,"Parco",-4,4,5, 10,1,
                 com.example.greenapplication.R.drawable.parco, "Aooooo"), 1,
             navController = rememberNavController(), false, "team1", 65,
-            70, 25
+            70, 25, ""
         ) { _: Mossa -> } //Inserire l'indice dell'infrastruttura a seconda
                                                         // della carta che si vuole visualizzare
     }
