@@ -47,7 +47,7 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 
 @Composable
-fun BottomBar(SelectedIcon: Int) {
+fun BottomBar(SelectedIcon: Int, home : Boolean, shop : Boolean, poll : Boolean, navController: NavController) {
     val selectedIndex = remember { mutableStateOf(SelectedIcon) }
     BottomNavigation(backgroundColor = Color(0xD9FFFFFF).compositeOver(Color.White),
         modifier = Modifier
@@ -66,8 +66,13 @@ fun BottomBar(SelectedIcon: Int) {
 
             selected = (selectedIndex.value == 0),
             onClick = {
-                selectedIndex.value = 0
-            })
+                if(home){
+                    navController.navigate("main")
+                    selectedIndex.value = 0
+                }
+            },
+            enabled = home
+        )
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.ShoppingCart, "", modifier = Modifier.size(30.dp))
@@ -75,25 +80,36 @@ fun BottomBar(SelectedIcon: Int) {
 
             selected = (selectedIndex.value == 1),
             onClick = {
-                selectedIndex.value = 1
-            })
+                if(shop){
+                    navController.navigate("shop")
+                    selectedIndex.value = 1
+                }
+            },
+            enabled = shop
+        )
 
         BottomNavigationItem(icon = {
             Icon(imageVector = Icons.Default.Notifications,"",modifier = Modifier.size(30.dp))
         },
             selected = (selectedIndex.value == 2),
             onClick = {
-                selectedIndex.value = 2
-            })
+                if(poll){
+                    navController.navigate("poll")
+                    selectedIndex.value = 2
+                }
+            },
+            enabled = poll
+        )
     }
 }
 
 @Composable
-fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int) {
+fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int, home : Boolean, shop : Boolean, poll : Boolean,
+              navController: NavController) {
 
         Scaffold(
 
-            bottomBar = {BottomBar(SelectedIcon) }
+            bottomBar = {BottomBar(SelectedIcon, home, shop, poll, navController) }
 
         )
         {
@@ -221,7 +237,7 @@ fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer
     if(surveyOn){
         navController.navigate("poll")
     }
-    MapScreen(SelectedIcon = 0)
+    MapScreen(SelectedIcon = 0, home = true, shop = true, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController)
 }
 

@@ -63,6 +63,10 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
                 text3 += i1.nome
             }
         }
+        "upgrade" -> {
+            text1 = "Sbloccare"
+            text2 = "La tua proposta è sbloccare il livello successivo"
+        }
     }
     Card(
         modifier = Modifier
@@ -130,7 +134,7 @@ fun ConfermaMossa(team : String, CO2 : Int, health : Int, energy : Int,
                   navController: NavController, mossa : Mossa, infrastrutture : List<Infrastruttura>,
                   setMossa : (Mossa)->Unit, addMove: (String, String, Int, Int) -> Unit
 ){
-    MapScreen(SelectedIcon = 0)
+    MapScreen(SelectedIcon = 0, home = false, shop = false, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController)
     EliminaStruttura(mossa, items, infrastrutture, setMossa, addMove, navController)
 }

@@ -99,13 +99,12 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
     if(surveyOn){
         navController.navigate("poll")
     }
-    var text = ""
-    if(square != 0){
-        text = "Smantella"
+    var text = if(square != 0){
+        "Smantella"
     }else{
-        text = "Acquista"
+        "Acquista"
     }
-    Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)},
+    Scaffold(bottomBar = {BottomBar(SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController)},
     ) {
         ValueScreen(team, CO2, health, energy)
 

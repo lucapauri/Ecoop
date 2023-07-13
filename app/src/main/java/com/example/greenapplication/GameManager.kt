@@ -32,6 +32,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val initialTime = 1800000
     private val refreshTimer = 500
     private val initialActionsPoints = 2
+    private val upgradeCost = 20
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -93,6 +94,14 @@ class GameManager(private val scope:CoroutineScope) {
             com.example.greenapplication.R.drawable.fotovoltaica,
         "Centrale che immagazzina l'energia solare attraverso dei pannelli solari per produrre energia elettrica."))
     }
+
+    var winningTeam = ""
+
+    val winningTreshold = 30
+
+    //Current items level
+    private val mutableItemsLevel = MutableLiveData<Map<String, Int>>()
+    val itemsLevel: LiveData<Map<String, Int>> = mutableItemsLevel
 
     //Current screen name
     private val mutableScreenName = MutableLiveData<ScreenName>().also {
@@ -300,6 +309,22 @@ class GameManager(private val scope:CoroutineScope) {
                     })
                     teamNames.forEach{
                         val team = ref.child("teams").child(it).child("items")
+                        //Listen items level change
+                        ref.child("level").child(it).addValueEventListener(object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if(snapshot.value != null){
+                                    mutableItemsLevel.value = mutableItemsLevel.value?.mapValues { m->
+                                        if(m.key == it ){
+                                            snapshot.value as Int
+                                        }else{
+                                            m.value
+                                        }
+                                    }
+                                }
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
                         //Listen items change
                         team.addValueEventListener(object:ValueEventListener{
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -417,6 +442,24 @@ class GameManager(private val scope:CoroutineScope) {
                 ref.child("turn").setValue(teamNames[0]).await()
                 ref.child("screen").setValue("Playing").await()
                 teamNames.forEach{
+                    //Initialize items level
+                    ref.child("level").child(it).setValue(1)
+                    //Listen items level change
+                    ref.child("level").child(it).addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if(snapshot.value != null){
+                                mutableItemsLevel.value = mutableItemsLevel.value?.mapValues { m->
+                                    if(m.key == it ){
+                                        snapshot.value as Int
+                                    }else{
+                                        m.value
+                                    }
+                                }
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     val team = ref.child("teams").child(it).child("items")
                     //Listen items change
                     team.addValueEventListener(object:ValueEventListener{
@@ -425,6 +468,10 @@ class GameManager(private val scope:CoroutineScope) {
                             ref.child("teams").child(it).child("CO2").setValue(sumCO2(it))
                             ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
                             updateSumItems(it)
+                            if(sumHappiness(it).toInt() - sumCO2(it).toInt() > winningTreshold){
+                                winningTeam = it
+                                ref.child("screen").setValue("End")
+                            }
                         }
                         override fun onCancelled(error: DatabaseError) {
                         }
@@ -468,6 +515,10 @@ class GameManager(private val scope:CoroutineScope) {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if(snapshot.value != null){
                             mutableTimer.value = snapshot.value as Long
+                            if(mutableTimer?.value?:0 == 0.toLong()){
+                                endGame()
+                                ref.child("screen").setValue("End")
+                            }
                         }
                     }
 
@@ -538,6 +589,28 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
+    fun upgradeLevel(team : String){
+        try {
+            val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+            ref.child("level").child(team).setValue(ServerValue.increment(1))
+        }catch (e : Exception){
+            mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
+        }
+        updateEnergy(-upgradeCost, team)
+        nextTurn()
+    }
+
+    private fun endGame(){
+        var m = mutableMapOf<String, Int>()
+        teamNames.forEach{
+            val happiness = happiness.value?.get(it)?.toInt()?:0
+            val co2 = cO2.value?.get(it)?.toInt()?:0
+            val sum = happiness - co2
+            m[it] = sum
+        }
+        winningTeam = m.maxByOrNull { it.value }?.key?: ""
+    }
+
     private fun move(move : Mossa){
         when(move.type){
             "add" -> addItem(move.team, move.id, move.square)
@@ -545,6 +618,9 @@ class GameManager(private val scope:CoroutineScope) {
             "replace" -> {
                 deleteItem(move.team, move.square)
                 addItem(move.team, move.id, move.square)
+            }
+            "upgrade" -> {
+                upgradeLevel(move.team)
             }
         }
     }

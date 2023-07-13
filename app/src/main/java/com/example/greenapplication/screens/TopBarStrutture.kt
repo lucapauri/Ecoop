@@ -29,11 +29,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.greenapplication.Mossa
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 
 @Composable
-fun TopBarShop(SelectedIcon: Int){
+fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->Unit,
+               navController: NavController, team : String){
     val contextForToast = LocalContext.current.applicationContext
 
     Box(modifier = Modifier
@@ -42,12 +46,12 @@ fun TopBarShop(SelectedIcon: Int){
         .size(100.dp))
     {
         Row(horizontalArrangement = Arrangement.spacedBy(84.dp), modifier = Modifier.padding(bottom = 11.dp, top = 15.dp, start = 15.dp)){
-            val selectedIcon = remember { mutableStateOf(SelectedIcon) }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally){
-            Button(onClick = { Toast.makeText(contextForToast, "Clicked on Button", Toast.LENGTH_SHORT).show() },
+            Button(onClick = { setView(1) },
                 modifier = Modifier.shadow(8.dp),
-                enabled= true) {
+                enabled= true,
+            ) {
                     Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp),
                         tint = Color(0xff2C4BD7)
                     )
@@ -58,7 +62,14 @@ fun TopBarShop(SelectedIcon: Int){
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { Toast.makeText(contextForToast, "Clicked on Button", Toast.LENGTH_SHORT).show() },
+            Button(onClick = {
+                if(SelectedIcon > 1){
+                    setView(2)
+                }else{
+                    setMossa(Mossa("A", "upgrade", team, 0, 0, 0))
+                    navController.navigate("confirm")
+                }
+                             },
                 modifier = Modifier.shadow(8.dp),
                 enabled = (SelectedIcon > 1 )) {
                     Icon(imageVector = Icons.Default.Star,"Livello 1",
@@ -70,7 +81,14 @@ fun TopBarShop(SelectedIcon: Int){
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { Toast.makeText(contextForToast, "Clicked on Button", Toast.LENGTH_SHORT).show() },
+            Button(onClick = {
+                if(SelectedIcon > 2){
+                    setView(3)
+                }else{
+                    setMossa(Mossa("A", "upgrade", team, 0, 0, 0))
+                    navController.navigate("confirm")
+                }
+            },
                 modifier = Modifier.shadow(8.dp),
                 enabled= (SelectedIcon > 2 )) {
                     Icon(imageVector = Icons.Default.Star,"Livello 1", modifier = Modifier.size(30.dp),
@@ -90,7 +108,7 @@ fun TopBarShop(SelectedIcon: Int){
 @Composable
 fun PreviewTopBar(){
     GameSkeletonTheme() {
-        TopBarShop(SelectedIcon = 3)
+        TopBarShop(SelectedIcon = 3,{ _: Int -> },{_:Mossa->}, rememberNavController(), "")
         ContentView()
     }
 }

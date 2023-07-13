@@ -21,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -37,8 +39,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.Mossa
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -275,13 +281,18 @@ class ShopScreen : ComponentActivity () {
 
 
     @Composable
-    fun Shop(){
-        Scaffold(bottomBar = {BottomBar(SelectedIcon = 1)}) {
+    fun Shop(navController: NavController, team : String, CO2 : Int, health : Int, energy : Int, level : Int,
+             infrastrutture : List<Infrastruttura>, setMossa : (Mossa) -> Unit){
+        val (view, setview) = remember{ mutableStateOf(1) }
+        val lista = infrastrutture.filter { it.level == view }
+        Scaffold(bottomBar = {BottomBar(
+            SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController
+        )}) {
 
-            ValueScreen(title = "Quartiere Rosso", 65, 70, 25)
+            ValueScreen(title = team, CO2, health, energy)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(150.dp))
-                TopBarShop(SelectedIcon = 3) // 1 -> 2 livelli bloccati,
+                TopBarShop(SelectedIcon = level, setview, setMossa, navController, team) // 1 -> 2 livelli bloccati,
                 // 2 -> 1 livello bloccato,
                 // 3 -> tutti i livello sbloccati
                 ContentView(Lista = createDataList()) //permette di passare una
@@ -297,7 +308,7 @@ class ShopScreen : ComponentActivity () {
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-            Shop()
+            Shop(rememberNavController(), "", 65, 70, 25, 3, emptyList()) { _: Mossa -> }
         }
     }
 }

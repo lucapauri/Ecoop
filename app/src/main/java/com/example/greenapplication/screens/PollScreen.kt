@@ -108,7 +108,7 @@ fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>
     if(!surveyOn){
         navController.navigate("main")
     }
-    MapScreen(SelectedIcon = 2)
+    MapScreen(SelectedIcon = 2, home = true, shop = false, poll = true, navController = navController)
     GridScreen(team = team, CO2, health,energy, timer, items, navController)
     PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
 }
@@ -117,9 +117,15 @@ fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>
 @Composable
 fun PreviewPollScreen(){
     GameSkeletonTheme {
-        MapScreen(SelectedIcon = 2)
-        GridScreen(team = "Quartiere Rosso", 65, 70,25, listOf(0,0), emptyMap(),
-            navController = rememberNavController())
-        PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
+        Poll(
+            team = "",
+            CO2 = 65,
+            health = 70,
+            energy = 25,
+            timer = listOf(0,0),
+            navController = rememberNavController(),
+            surveyOn = true,
+            items = emptyMap()
+        )
     }
 }

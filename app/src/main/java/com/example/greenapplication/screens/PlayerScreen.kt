@@ -41,6 +41,8 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val surveyOn = survey.value?:false
     val i = vm.itemsTeams.observeAsState()
     val infrastrutture = vm.items
+    val l = vm.level.observeAsState()
+    val level = l.value?.get(team)?: 1
     val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
         mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,String>()
     if(ms.isEmpty()){
@@ -84,7 +86,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 }
             }
             composable("shop"){
-                ShopScreen()
+                ShopScreen().Shop(navController, team, CO2, happiness, energy, level, infrastrutture, setMossa)
             }
             composable("confirm"){
                 ConfermaMossa(team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
