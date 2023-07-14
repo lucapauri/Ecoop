@@ -65,7 +65,6 @@ class ShopScreen : ComponentActivity () {
                         color = MaterialTheme.colors.background
                     ),
                     onClick = {
-                        Log.d("GameManager", "click")
                         navController.navigate("detailCard?cardId=${testData.id}&squareId=${0}")
                     }
                 ),

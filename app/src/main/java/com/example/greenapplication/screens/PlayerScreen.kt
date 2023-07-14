@@ -94,6 +94,20 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 ConfermaMossa(team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
                     navController, mossa , infrastrutture, setMossa, vm::addMove)
             }
+            composable("select"){
+                selectCell(
+                    team = team,
+                    CO2 = CO2,
+                    health = happiness,
+                    energy = energy,
+                    timer = ms,
+                    navController = navController,
+                    surveyOn = surveyOn,
+                    items = items as Map<String, Infrastruttura>,
+                    mossa = mossa,
+                    setMossa = setMossa
+                )
+            }
         }
     }
 }

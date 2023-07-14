@@ -218,7 +218,8 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                           setMossa(Mossa("A","delete", team, CardData.id, square, 0))
                           navController.navigate("confirm")
                       }else{
-
+                          setMossa(Mossa("A","", team, CardData.id, square, 0))
+                          navController.navigate("select")
                       }
                     },
                     shape = RoundedCornerShape(20.dp),

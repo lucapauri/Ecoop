@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.Mossa
 import it.polito.did.gameskeleton.screens.GenericScreen
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
@@ -133,14 +134,24 @@ fun MapScreen(modifier: Modifier = Modifier, SelectedIcon: Int, home : Boolean, 
 }
 
 @Composable
-fun SingleCard(res: Int, content: String, square : Int, navController: NavController, id : Int) {
+fun SingleCard(res: Int, content: String, square : Int, navController: NavController, id : Int, select: Boolean,
+               mossa: Mossa, setMossa: (Mossa) -> Unit) {
     Card(
         modifier = Modifier
             .padding(5.dp)
             .clickable(
                 onClick = {
-                    if(id != 0){
-                        navController.navigate("detailCard?cardId=${id}&squareId=${square}")
+                    if(!select){
+                        if (id != 0) {
+                            navController.navigate("detailCard?cardId=${id}&squareId=${square}")
+                        }
+                    }else{
+                        if(id == 0){
+                            setMossa(Mossa("A", "add", mossa.team, mossa.id, square, 0))
+                        }else{
+                            setMossa(Mossa("A", "replace", mossa.team, mossa.id, square, 0))
+                        }
+                        navController.navigate("confirm")
                     }
                 }
             ),
@@ -157,7 +168,8 @@ fun SingleCard(res: Int, content: String, square : Int, navController: NavContro
     }
 }
 @Composable
-fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
+fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController, select: Boolean,
+             mossa: Mossa, setMossa: (Mossa) -> Unit) {
   Column(modifier = Modifier.padding(15.dp), verticalArrangement = Arrangement.Center
   ) {
       Spacer(modifier = Modifier.height(20.dp))
@@ -168,11 +180,11 @@ fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
           SingleCard(res = items?.get("1")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 1, navController, items?.get("1")?.id?:0)
+              content = "logo", 1, navController, items?.get("1")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("2")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 2, navController, items?.get("2")?.id?:0)
+              content = "logo", 2, navController, items?.get("2")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("3")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 3, navController, items?.get("3")?.id?:0)
+              content = "logo", 3, navController, items?.get("3")?.id?:0, select, mossa, setMossa)
     }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -182,11 +194,11 @@ fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
           SingleCard(res = items?.get("4")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 4, navController, items?.get("4")?.id?:0)
+              content = "logo", 4, navController, items?.get("4")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("5")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 5, navController, items?.get("5")?.id?:0)
+              content = "logo", 5, navController, items?.get("5")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("6")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 6, navController, items?.get("6")?.id?:0)
+              content = "logo", 6, navController, items?.get("6")?.id?:0, select, mossa, setMossa)
       }
       Spacer(modifier = Modifier.height(20.dp))
       Row(modifier = Modifier
@@ -196,11 +208,11 @@ fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
           horizontalArrangement  =  Arrangement.SpaceBetween
       ){
           SingleCard(res = items?.get("7")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 7, navController, items?.get("7")?.id?:0)
+              content = "logo", 7, navController, items?.get("7")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("8")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 8, navController, items?.get("8")?.id?:0)
+              content = "logo", 8, navController, items?.get("8")?.id?:0, select, mossa, setMossa)
           SingleCard(res = items?.get("9")?.imageId?: com.example.greenapplication.R.drawable.logo,
-              content = "logo", 9, navController, items?.get("9")?.id?:0)
+              content = "logo", 9, navController, items?.get("9")?.id?:0, select, mossa, setMossa)
       }
 
   }
@@ -208,7 +220,8 @@ fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController) {
 
 @Composable
 fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>,
-               items: Map<String, Infrastruttura>, navController: NavController){
+               items: Map<String, Infrastruttura>, navController: NavController, select : Boolean = false ,
+               mossa: Mossa = Mossa("","","",0,0,0), setMossa: (Mossa) -> Unit = {}){
     Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text ( team,
@@ -227,7 +240,7 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
         IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
-        CardDemo(items, navController)
+        CardDemo(items, navController, select, mossa, setMossa)
     }
 }
 
@@ -239,6 +252,17 @@ fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer
     }
     MapScreen(SelectedIcon = 0, home = true, shop = true, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController)
+}
+
+@Composable
+fun selectCell(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
+               navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>,
+               mossa: Mossa, setMossa : (Mossa) -> Unit){
+    if(surveyOn){
+        navController.navigate("poll")
+    }
+    MapScreen(SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController)
+    GridScreen(team, CO2, health, energy, timer, items, navController, true, mossa, setMossa)
 }
 
 @Preview(showBackground = true)
