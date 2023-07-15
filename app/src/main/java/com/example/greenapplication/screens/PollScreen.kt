@@ -67,9 +67,9 @@ fun PollScreen(proposte : Map<String, String>, voted : Boolean, voteMove : (Stri
 @Composable
 fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>, navController: NavController,
          surveyOn : Boolean, items : Map<String, Infrastruttura>, moves : Map<String, String>, voted : Boolean,
-            voteMove : (String) -> Unit){
+            voteMove : (String) -> Unit, turn : String, actionPoints : Int, mst : List<Int>){
     MapScreen(SelectedIcon = 2, home = true, shop = false, poll = true, navController = navController)
-    GridScreen(team, CO2, health,energy, timer, items, navController)
+    GridScreen(team, CO2, health,energy, timer, items, navController, turn, actionPoints, mst)
     PollScreen(moves, voted, voteMove)
 }
 
@@ -77,17 +77,6 @@ fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>
 @Composable
 fun PreviewPollScreen(){
     GameSkeletonTheme {
-        Poll(
-            team = "",
-            CO2 = 65,
-            health = 70,
-            energy = 25,
-            timer = listOf(0,0),
-            navController = rememberNavController(),
-            surveyOn = true,
-            items = emptyMap(),
-            moves = emptyMap(),
-            false
-        ) { _: String -> }
+
     }
 }

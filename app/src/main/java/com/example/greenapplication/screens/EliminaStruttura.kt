@@ -132,13 +132,14 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
 fun ConfermaMossa(surveyOn : Boolean, team : String, CO2 : Int, health : Int, energy : Int,
                   timer : List<Int>, items : Map<String, Infrastruttura>,
                   navController: NavController, mossa : Mossa, infrastrutture : List<Infrastruttura>,
-                  setMossa : (Mossa)->Unit, addMove: (String, String, Int, Int) -> Unit
+                  setMossa : (Mossa)->Unit, addMove: (String, String, Int, Int) -> Unit, turn : String,
+                  actionPoints : Int, mst : List<Int>
 ){
     if(surveyOn){
         navController.navigate("poll")
     }
     MapScreen(SelectedIcon = 0, home = false, shop = false, poll = false, navController = navController)
-    GridScreen(team, CO2, health, energy, timer, items, navController)
+    GridScreen(team, CO2, health, energy, timer, items, navController, turn, actionPoints, mst)
     EliminaStruttura(mossa, items, infrastrutture, setMossa, addMove, navController)
 }
 
@@ -146,9 +147,6 @@ fun ConfermaMossa(surveyOn : Boolean, team : String, CO2 : Int, health : Int, en
 @Composable
 fun PreviewEliminaStruttura(){
     GameSkeletonTheme {
-        ConfermaMossa(false, "team1", 65, 70, 25, listOf(0,0),
-        emptyMap(), rememberNavController(), Mossa("", "", "", 0, 0, 0),
-            emptyList(), { _: Mossa -> }
-        ) { _: String, _: String, _: Int, _: Int -> }
+
     }
 }

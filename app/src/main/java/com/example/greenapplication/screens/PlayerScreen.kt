@@ -46,6 +46,9 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val t = vm.turn.observeAsState()
     val moves = vm.moves.observeAsState().value?: emptyList()
     val turn = t.value?:""
+    val action = vm.actionPoints.observeAsState().value?:0
+    val tt = vm.timerTurn.observeAsState()
+    val mst = formatTime(tt.value ?: 0)
     val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
         mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,Infrastruttura>()
     if(ms.isEmpty()){
@@ -67,7 +70,10 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 timer = ms,
                 navController,
                 surveyOn,
-                items as Map<String, Infrastruttura>
+                items as Map<String, Infrastruttura>,
+                turn,
+                action,
+                mst
             )}
             composable("poll"){
                 val itemss = items as Map<String, Infrastruttura>
@@ -108,7 +114,10 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 items as Map<String, Infrastruttura>,
                 proposte,
                 voted,
-                vm::voteMove
+                vm::voteMove,
+                turn,
+                action,
+                mst
             )}
             composable("detailCard?cardId={cardId}&squareId={squareId}",
                 arguments = listOf(
@@ -128,7 +137,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
             }
             composable("confirm"){
                 ConfermaMossa(surveyOn, team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
-                    navController, mossa , infrastrutture, setMossa, vm::addMove)
+                    navController, mossa , infrastrutture, setMossa, vm::addMove, turn, action, mst)
             }
             composable("select"){
                 selectCell(
@@ -141,7 +150,10 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                     surveyOn = surveyOn,
                     items = items as Map<String, Infrastruttura>,
                     mossa = mossa,
-                    setMossa = setMossa
+                    setMossa = setMossa,
+                    turn,
+                    action,
+                    mst
                 )
             }
         }

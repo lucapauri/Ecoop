@@ -20,9 +20,14 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
 fun ProfScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, cO2 : LiveData<Map<String, String>>,
-               happiness : LiveData<Map<String, String>>, energy : LiveData<Map<String, String>>, modifier: Modifier = Modifier){
+               happiness : LiveData<Map<String, String>>, energy : LiveData<Map<String, String>>,
+                turn : LiveData<String>, timerTurn : LiveData<Long>, action : LiveData<Int>, modifier: Modifier = Modifier){
     val timer = time.observeAsState()
     val ms = formatTime(timer.value ?: 0)
+    val tt = timerTurn.observeAsState()
+    val mst = formatTime(tt.value ?: 0)
+    val isTurn = turn.observeAsState().value
+    val actionPoints = action.observeAsState().value
     val CO2 = cO2.observeAsState().value
     val health = happiness.observeAsState().value
     val money = energy.observeAsState().value
@@ -36,6 +41,18 @@ fun ProfScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, cO2 : Live
                 "%02d",
                 ms[0]
             ) + ":" + String.format("%02d", ms[1])
+        )
+        androidx.compose.material.Text(
+            text = "Turno $isTurn"
+        )
+        androidx.compose.material.Text(
+            text = "Punti azione: $actionPoints"
+        )
+        androidx.compose.material.Text(
+            text = String.format(
+                "%02d",
+                mst[0]
+            ) + ":" + String.format("%02d", mst[1])
         )
         teams.forEach{ t ->
             Row(modifier = Modifier.padding(top = 15.dp),

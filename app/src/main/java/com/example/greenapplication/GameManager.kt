@@ -30,6 +30,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val initialItems = 2
     private val initialEnergy = 50
     private val initialTime = 1800000
+    private val initialTimeTurn = 150000
     private val refreshTimer = 500
     private val initialActionsPoints = 2
     private val upgradeCost = 20
@@ -194,11 +195,17 @@ class GameManager(private val scope:CoroutineScope) {
 
     val timer : LiveData<Long> = mutableTimer
 
+    private val mutableTimerTurn = MutableLiveData<Long>().also {
+        it.value = initialTimeTurn.toLong()
+    }
+
+    val timerTurn : LiveData<Long> = mutableTimerTurn
+
     private val mutableActionPoints = MutableLiveData<Int>().also {
         it.value = initialActionsPoints
     }
 
-    private val actionPoints : LiveData<Int> = mutableActionPoints
+    val actionPoints : LiveData<Int> = mutableActionPoints
 
     private val mutableSurveyOn = MutableLiveData<Boolean>().also {
         it.value = false
@@ -383,6 +390,17 @@ class GameManager(private val scope:CoroutineScope) {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                    //Listen TimerTurn
+                    ref.child("TimerTurn").addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if(snapshot.value != null){
+                                mutableTimerTurn.value = snapshot.value as Long
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                     //Listen action points
                     ref.child("actionPoints").addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -560,8 +578,24 @@ class GameManager(private val scope:CoroutineScope) {
                     override fun onCancelled(error: DatabaseError) {
                     }
                 })
+                //Listen TimerTurn
+                ref.child("TimerTurn").addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.value != null){
+                            mutableTimerTurn.value = snapshot.value as Long
+                            if(mutableTimerTurn.value!! < 0){
+                                nextTurn()
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
                 //Create Timer
                 startTimer(ref)
+                //Create TimerTurn
+                startTimerTurn(ref)
                 //Listen winning team
                 ref.child("winningTeam").addValueEventListener(object:ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -705,6 +739,18 @@ class GameManager(private val scope:CoroutineScope) {
         , refreshTimer.toLong())
     }
 
+    private fun startTimerTurn(ref : DatabaseReference){
+        val handlerTime = Handler()
+        handlerTime.postDelayed(
+            object : Runnable {
+                override fun run() {
+                    ref.child("TimerTurn").setValue(timerTurn.value?.minus(refreshTimer.toLong()))
+                    handlerTime.postDelayed(this, refreshTimer.toLong())
+                }
+            }
+            , refreshTimer.toLong())
+    }
+
     fun fetchCO2(snapshot: DataSnapshot, teamName: String){
         val v = snapshot.value ?: "0"
         if(v is String){
@@ -801,6 +847,7 @@ class GameManager(private val scope:CoroutineScope) {
                     val price = objects.sumOf { it.energy }
                     updateEnergy(price, teamNames[index])
                     ref.child("actionPoints").setValue(initialActionsPoints)
+                    ref.child("TimerTurn").setValue(initialTimeTurn.toLong())
                 }
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
@@ -895,10 +942,12 @@ class GameManager(private val scope:CoroutineScope) {
     fun addMove(type : String, team : String, id : Int, square : Int){
         scope.launch {
             try {
-                val m = Mossa(firebaseAuth.uid.toString(), type, team, id, square, 0)
-                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-                ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
-                moved = true
+                if(mutablemoves.value?.filter { it.type == type && it.id == id && it.square == square }?.size?:0 == 0){
+                    val m = Mossa(firebaseAuth.uid.toString(), type, team, id, square, 0)
+                    val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
+                    moved = true
+                }
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }

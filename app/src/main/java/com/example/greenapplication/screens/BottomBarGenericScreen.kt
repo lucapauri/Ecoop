@@ -141,14 +141,14 @@ fun SingleCard(res: Int, content: String, square : Int, navController: NavContro
             .padding(5.dp)
             .clickable(
                 onClick = {
-                    if(!select){
+                    if (!select) {
                         if (id != 0) {
                             navController.navigate("detailCard?cardId=${id}&squareId=${square}")
                         }
-                    }else{
-                        if(id == 0){
+                    } else {
+                        if (id == 0) {
                             setMossa(Mossa("A", "add", mossa.team, mossa.id, square, 0))
-                        }else{
+                        } else {
                             setMossa(Mossa("A", "replace", mossa.team, mossa.id, square, 0))
                         }
                         navController.navigate("confirm")
@@ -220,7 +220,8 @@ fun CardDemo(items: Map<String, Infrastruttura>, navController: NavController, s
 
 @Composable
 fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<Int>,
-               items: Map<String, Infrastruttura>, navController: NavController, select : Boolean = false ,
+               items: Map<String, Infrastruttura>, navController: NavController, turn : String,
+               actionPoints : Int, mst : List<Int>, select : Boolean = false ,
                mossa: Mossa = Mossa("","","",0,0,0), setMossa: (Mossa) -> Unit = {}){
     Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -240,32 +241,39 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
         IconBar(percentCO2 = CO2, percentHealth = health, energyValue = energy)
         Divider(modifier = Modifier.padding(15.dp), thickness = 1.dp, color = Color.LightGray)
         Text(text = String.format("%02d", ms[0]) + ":" + String.format("%02d", ms[1]))
+        Row() {
+            Text(text = "Turno $turn  ")
+            Text(text = "Punti azione: $actionPoints  ")
+            Text(text = String.format("%02d", mst[0]) + ":" + String.format("%02d", mst[1]))
+        }
         CardDemo(items, navController, select, mossa, setMossa)
     }
 }
 
 @Composable
 fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
-                     navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>){
+                     navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>, turn : String,
+                     actionPoints : Int, mst : List<Int>){
     MapScreen(SelectedIcon = 0, home = true, shop = true, poll = false, navController = navController)
-    GridScreen(team, CO2, health, energy, timer, items, navController)
+    GridScreen(team, CO2, health, energy, timer, items, navController, turn, actionPoints, mst)
 }
 
 @Composable
 fun selectCell(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
                navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>,
-               mossa: Mossa, setMossa : (Mossa) -> Unit){
+               mossa: Mossa, setMossa : (Mossa) -> Unit,turn : String,
+               actionPoints : Int, mst : List<Int>){
     MapScreen(SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController)
-    GridScreen(team, CO2, health, energy, timer, items, navController, true, mossa, setMossa)
+    GridScreen(team, CO2, health, energy, timer, items, navController, turn, actionPoints, mst, true, mossa, setMossa)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapScreen() {
     GameSkeletonTheme {
-        mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0),
-            navController = rememberNavController(), false, emptyMap()
-        )
+        //mainPlayerScreen(team = "Team 1", 65, 70 , 25, listOf(0,0),
+            //navController = rememberNavController(), false, emptyMap()
+        //)
     }
 }
 

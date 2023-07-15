@@ -32,5 +32,7 @@ class GameViewModel: ViewModel() {
     val items = gameManager.items
     val winningTeam = gameManager.winningTeam
     val level = gameManager.itemsLevel
+    val actionPoints = gameManager.actionPoints
+    val timerTurn = gameManager.timerTurn
 
 }
