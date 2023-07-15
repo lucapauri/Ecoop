@@ -6,6 +6,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenapplication.screens.EndScreen
+import com.example.greenapplication.screens.ProfScreen
 import it.polito.did.gameskeleton.GameViewModel
 import it.polito.did.gameskeleton.ScreenName
 
@@ -25,7 +26,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             vm::onStartGame,
             modifier)
         is ScreenName.WaitingStart -> WaitScreen(modifier)
-        is ScreenName.Dashboard -> DashboardScreen(vm::formatTime,vm.timer ,modifier)
+        is ScreenName.Dashboard -> ProfScreen(vm::formatTime,vm.timer , vm.cO2, vm.happiness, vm.energy ,modifier)
         is ScreenName.Playing -> PlayerScreen(vm::formatTime,vm.timer, screenName.team,vm::onNextTurn, vm::addItem, vm::deleteItem, vm, modifier)
         is ScreenName.Error -> ErrorScreen(screenName.message, modifier)
         is ScreenName.End -> EndScreen(screenName.team)

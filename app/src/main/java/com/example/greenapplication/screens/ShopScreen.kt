@@ -128,9 +128,6 @@ class ShopScreen : ComponentActivity () {
              infrastrutture : List<Infrastruttura>, turn : String, setMossa : (Mossa) -> Unit){
         val (view, setview) = remember{ mutableStateOf(1) }
         val lista = infrastrutture.filter { it.level == view }
-        if(surveyOn){
-            navController.navigate("poll")
-        }
         Scaffold(bottomBar = {BottomBar(
             SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController
         )}) {

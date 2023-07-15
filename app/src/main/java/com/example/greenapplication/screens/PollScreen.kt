@@ -27,10 +27,10 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 val azioni = listOf("Aggiungere", "Smantellare")
 
 @Composable
-fun PollScreen(proposte : List<Mossa>, infrastrutture : List<Infrastruttura>, items: Map<String, Infrastruttura>){
+fun PollScreen(proposte : Map<String, String>, voted : Boolean, voteMove : (String) -> Unit){
 
+    Log.d("GameManager", voted.toString())
     val (selectedProposte, setSelectedProposte) = remember { mutableStateOf("") }
-    Log.d("GameManager", selectedProposte)
 
     Card(
         modifier = Modifier
@@ -45,98 +45,32 @@ fun PollScreen(proposte : List<Mossa>, infrastrutture : List<Infrastruttura>, it
             Text(text = "Scegli l'opzione che preferisci: \n ", style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.background,)
             proposte.forEach { option ->
-                var text = ""
-                when(option.type){
-                    "add" -> {
-                        val i = infrastrutture.find { it.id == option.id }
-                        if (i != null) {
-                            text = "Costruire ${i.nome}"
-                        }
-                    }
-                    "delete" -> {
-                        val i = items[option.square.toString()]
-                        if (i != null) {
-                            text = "Smantellare ${i.nome}"
-                        }
-                    }
-                    "replace" -> {
-                        val i1 = infrastrutture.find { it.id == option.id }
-                        val i = items[option.square.toString()]
-                        if (i != null && i1 != null) {
-                            text = "Smantellare $i e costruire $i1"
-                        }
-                    }
-                    "upgrade" -> {
-                        text = "Sbloccare il livello successivo"
-                    }
-                }
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = selectedProposte == option.key,
-                        onClick = { setSelectedProposte(option.key) },
+                        onClick = {
+                            setSelectedProposte(option.key)
+                            voteMove(option.key)
+                                  },
                         modifier = Modifier.padding(8.dp),
+                        enabled = !voted
                     )
-                    Text(text = text, style = MaterialTheme.typography.subtitle2,
+                    Text(text = option.value, style = MaterialTheme.typography.subtitle2,
                         color = MaterialTheme.colors.onBackground, )
                 }
             }
         }
 
     }
-
-    /*Column(
-        modifier = Modifier.padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        androidx.compose.material.Text(
-            text = "Sondaggio",
-            style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.background,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-
-        androidx.compose.material.Text(
-            text = "${azioni}:",
-            style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme.colors.onBackground,
-            textAlign = TextAlign.Center
-        )
-        androidx.compose.material.Text(
-            text = "${Name}",
-            style = MaterialTheme.typography.body2,
-            color = MaterialTheme.colors.onBackground,
-            textAlign = TextAlign.Center
-        )
-
-        Row() {
-            Button(onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
-            modifier = Modifier.padding(25.dp)) {
-                androidx.compose.material.Text(text = "", color = Color.White)
-                Icon(imageVector = Icons.Default.Close, "",
-                    tint = Color.White)
-            }
-            Button(onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
-                modifier = Modifier.padding(25.dp)) {
-                androidx.compose.material.Text(text = "", color = Color.White)
-                Icon(imageVector = Icons.Default.Check, "",
-                    tint = Color.White)
-            }
-        } */
 }
 
 @Composable
 fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>, navController: NavController,
-         surveyOn : Boolean, items : Map<String, Infrastruttura>, moves : List<Mossa>,
-         infrastrutture: List<Infrastruttura>){
-    if(!surveyOn){
-        navController.navigate("main")
-    }
+         surveyOn : Boolean, items : Map<String, Infrastruttura>, moves : Map<String, String>, voted : Boolean,
+            voteMove : (String) -> Unit){
     MapScreen(SelectedIcon = 2, home = true, shop = false, poll = true, navController = navController)
-    GridScreen(team = team, CO2, health,energy, timer, items, navController)
-    PollScreen(moves, infrastrutture, items)
+    GridScreen(team, CO2, health,energy, timer, items, navController)
+    PollScreen(moves, voted, voteMove)
 }
 
 @Preview
@@ -152,8 +86,8 @@ fun PreviewPollScreen(){
             navController = rememberNavController(),
             surveyOn = true,
             items = emptyMap(),
-            moves = emptyList(),
-            infrastrutture = emptyList()
-        )
+            moves = emptyMap(),
+            false
+        ) { _: String -> }
     }
 }

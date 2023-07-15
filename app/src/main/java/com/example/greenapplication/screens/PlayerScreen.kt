@@ -47,14 +47,18 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val moves = vm.moves.observeAsState().value?: emptyList()
     val turn = t.value?:""
     val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
-        mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,String>()
+        mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,Infrastruttura>()
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
+    var startDestination = if (surveyOn) "poll" else "main"
+    var proposte = mutableMapOf<String, String>()
     val navController = rememberNavController()
     var (mossa, setMossa) = remember{ mutableStateOf(Mossa("","", "", 0, 0, 0)) }
+    val v = vm.hasVoted.observeAsState()
+    val voted = v?.value?:false
     Scaffold(modifier = Modifier.fillMaxSize()) {
-        NavHost(navController = navController, startDestination = "main") {
+        NavHost(navController = navController, startDestination = startDestination) {
             composable("main"){ mainPlayerScreen(
                 team = team,
                 CO2 = CO2,
@@ -65,7 +69,35 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 surveyOn,
                 items as Map<String, Infrastruttura>
             )}
-            composable("poll"){ Poll(
+            composable("poll"){
+                val itemss = items as Map<String, Infrastruttura>
+                moves.forEach{
+                    when(it.type){
+                        "add" -> {
+                            val i = infrastrutture.find { i -> i.id == it.id }
+                            if (i != null) {
+                                proposte[it.key] = "Costruire ${i.nome}"
+                            }
+                        }
+                        "delete" -> {
+                            val i = items[it.square.toString()]
+                            if (i != null) {
+                                proposte[it.key] = "Smantellare ${i.nome}"
+                            }
+                        }
+                        "replace" -> {
+                            val i1 = infrastrutture.find { i -> i.id == it.id  }
+                            val i = items[it.square.toString()]
+                            if (i != null && i1 != null) {
+                                proposte[it.key] = "Smantellare ${i.nome} e costruire ${i1.nome}"
+                            }
+                        }
+                        "upgrade" -> {
+                            proposte[it.key] = "Sbloccare il livello successivo"
+                        }
+                    }
+                }
+                Poll(
                 team = team,
                 CO2 = CO2,
                 health = happiness,
@@ -74,8 +106,9 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 navController,
                 surveyOn,
                 items as Map<String, Infrastruttura>,
-                moves,
-                infrastrutture
+                proposte,
+                voted,
+                vm::voteMove
             )}
             composable("detailCard?cardId={cardId}&squareId={squareId}",
                 arguments = listOf(

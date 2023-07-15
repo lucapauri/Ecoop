@@ -13,9 +13,13 @@ import androidx.lifecycle.LiveData
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
-fun DashboardScreen(formatTime : (Long)->List<Int>,time : LiveData<Long> ,modifier: Modifier = Modifier) {
+fun DashboardScreen(formatTime : (Long)->List<Int>,time : LiveData<Long> , cO2 : LiveData<Map<String, String>>,
+    happiness : LiveData<Map<String, String>>, energy : LiveData<Map<String, String>>, modifier: Modifier = Modifier) {
     val timer = time.observeAsState()
     val ms = formatTime(timer.value ?: 0)
+    val CO2 = cO2.observeAsState().value
+    val health = happiness.observeAsState().value
+    val money = energy.observeAsState().value
     GenericScreen(title = "Dashboard", modifier) {
         Column(modifier= Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.fillMaxHeight()){

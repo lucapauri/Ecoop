@@ -247,9 +247,6 @@ fun GridScreen(team: String, CO2 : Int, health : Int, energy : Int, ms : List<In
 @Composable
 fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
                      navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>){
-    if(surveyOn){
-        navController.navigate("poll")
-    }
     MapScreen(SelectedIcon = 0, home = true, shop = true, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController)
 }
@@ -258,9 +255,6 @@ fun mainPlayerScreen(team : String, CO2 : Int, health : Int, energy : Int, timer
 fun selectCell(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>,
                navController: NavController, surveyOn : Boolean, items : Map<String, Infrastruttura>,
                mossa: Mossa, setMossa : (Mossa) -> Unit){
-    if(surveyOn){
-        navController.navigate("poll")
-    }
     MapScreen(SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController, true, mossa, setMossa)
 }

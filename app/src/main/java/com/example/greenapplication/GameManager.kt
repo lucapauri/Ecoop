@@ -155,7 +155,10 @@ class GameManager(private val scope:CoroutineScope) {
     }
     val cO2 : LiveData<Map<String,String>> = mutableCO2
 
-    var voted = false
+    private val mutableVoted = MutableLiveData<Boolean>().also{
+        it.value = false
+    }
+    val voted : LiveData<Boolean> = mutableVoted
 
     var moved = false
 
@@ -399,7 +402,7 @@ class GameManager(private val scope:CoroutineScope) {
                                 val b = v as Boolean
                                 if(surveyOn.value == true && !v){
                                     moved = false
-                                    voted = false
+                                    mutableVoted.value = false
                                 }
                                 mutableSurveyOn.value = b
                             }
@@ -902,12 +905,13 @@ class GameManager(private val scope:CoroutineScope) {
         }
     }
 
-    fun voteMove(key : Int){
+    fun voteMove(key : String){
         scope.launch {
             try {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-                ref.child("moves").child(key.toString()).child("votes")
+                ref.child("moves").child(key).child("votes")
                     .setValue(ServerValue.increment(1))
+                mutableVoted.value = true
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }

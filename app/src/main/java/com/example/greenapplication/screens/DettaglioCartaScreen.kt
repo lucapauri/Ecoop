@@ -95,10 +95,6 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                    navController: NavController, surveyOn : Boolean,
                         team : String, CO2 : Int, health : Int, energy: Int,
                             turn : String, setMossa : (Mossa) -> Unit) {
-
-    if(surveyOn){
-        navController.navigate("poll")
-    }
     var text = if(square != 0){
         "Smantella"
     }else{

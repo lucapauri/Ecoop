@@ -53,7 +53,7 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
         }
         "replace" -> {
             text1 = "Sostituire"
-            text2 = "La tua proposta è smantellare e costruire rispettivamente:"
+            text2 = "La tua proposta è costruire e smantellare rispettivamente:"
             val i1 = infrastrutture.find { it.id == mossa.id }
             if (i1 != null) {
                 text3 = i1.nome + " \n"
