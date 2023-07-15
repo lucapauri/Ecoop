@@ -1,5 +1,6 @@
 package com.example.greenapplication.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,18 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.greenapplication.Infrastruttura
+import com.example.greenapplication.Mossa
 import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 
 val azioni = listOf("Aggiungere", "Smantellare")
 
 @Composable
-fun PollScreen(azioni: String, Name: String){
+fun PollScreen(proposte : List<Mossa>, infrastrutture : List<Infrastruttura>, items: Map<String, Infrastruttura>){
 
-
-    val proposte = listOf("Proposta1", "Proposta2", "Proposta3", "Proposta4", "Proposta5" )
-    val selectedProposte = remember { mutableStateOf("") }
-
+    val (selectedProposte, setSelectedProposte) = remember { mutableStateOf("") }
+    Log.d("GameManager", selectedProposte)
 
     Card(
         modifier = Modifier
@@ -42,16 +42,41 @@ fun PollScreen(azioni: String, Name: String){
 
     {
         Column (Modifier.padding(top = 10.dp, start = 15.dp, end = 15.dp)) {
-            Text(text = "Scegli l'opzione che preferisci: \n ${selectedProposte.value}", style = MaterialTheme.typography.body2,
+            Text(text = "Scegli l'opzione che preferisci: \n ", style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.background,)
             proposte.forEach { option ->
+                var text = ""
+                when(option.type){
+                    "add" -> {
+                        val i = infrastrutture.find { it.id == option.id }
+                        if (i != null) {
+                            text = "Costruire ${i.nome}"
+                        }
+                    }
+                    "delete" -> {
+                        val i = items[option.square.toString()]
+                        if (i != null) {
+                            text = "Smantellare ${i.nome}"
+                        }
+                    }
+                    "replace" -> {
+                        val i1 = infrastrutture.find { it.id == option.id }
+                        val i = items[option.square.toString()]
+                        if (i != null && i1 != null) {
+                            text = "Smantellare $i e costruire $i1"
+                        }
+                    }
+                    "upgrade" -> {
+                        text = "Sbloccare il livello successivo"
+                    }
+                }
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = selectedProposte.value == option,
-                        onClick = { selectedProposte.value = option },
+                        selected = selectedProposte == option.key,
+                        onClick = { setSelectedProposte(option.key) },
                         modifier = Modifier.padding(8.dp),
                     )
-                    Text(text = option, style = MaterialTheme.typography.subtitle2,
+                    Text(text = text, style = MaterialTheme.typography.subtitle2,
                         color = MaterialTheme.colors.onBackground, )
                 }
             }
@@ -104,13 +129,14 @@ fun PollScreen(azioni: String, Name: String){
 
 @Composable
 fun Poll(team : String, CO2 : Int, health : Int, energy : Int, timer : List<Int>, navController: NavController,
-         surveyOn : Boolean, items : Map<String, Infrastruttura>){
+         surveyOn : Boolean, items : Map<String, Infrastruttura>, moves : List<Mossa>,
+         infrastrutture: List<Infrastruttura>){
     if(!surveyOn){
         navController.navigate("main")
     }
     MapScreen(SelectedIcon = 2, home = true, shop = false, poll = true, navController = navController)
     GridScreen(team = team, CO2, health,energy, timer, items, navController)
-    PollScreen(azioni.elementAt(0), strutture.elementAt(1).name.toString())
+    PollScreen(moves, infrastrutture, items)
 }
 
 @Preview
@@ -125,7 +151,9 @@ fun PreviewPollScreen(){
             timer = listOf(0,0),
             navController = rememberNavController(),
             surveyOn = true,
-            items = emptyMap()
+            items = emptyMap(),
+            moves = emptyList(),
+            infrastrutture = emptyList()
         )
     }
 }

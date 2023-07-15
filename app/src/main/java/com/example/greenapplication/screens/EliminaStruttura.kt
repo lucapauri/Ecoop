@@ -56,7 +56,7 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
             text2 = "La tua proposta è smantellare e costruire rispettivamente:"
             val i1 = infrastrutture.find { it.id == mossa.id }
             if (i1 != null) {
-                text3 = i1.nome + " "
+                text3 = i1.nome + " \n"
             }
             val i = items[mossa.square.toString()]
             if (i != null) {
@@ -129,11 +129,14 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
 }
 
 @Composable
-fun ConfermaMossa(team : String, CO2 : Int, health : Int, energy : Int,
+fun ConfermaMossa(surveyOn : Boolean, team : String, CO2 : Int, health : Int, energy : Int,
                   timer : List<Int>, items : Map<String, Infrastruttura>,
                   navController: NavController, mossa : Mossa, infrastrutture : List<Infrastruttura>,
                   setMossa : (Mossa)->Unit, addMove: (String, String, Int, Int) -> Unit
 ){
+    if(surveyOn){
+        navController.navigate("poll")
+    }
     MapScreen(SelectedIcon = 0, home = false, shop = false, poll = false, navController = navController)
     GridScreen(team, CO2, health, energy, timer, items, navController)
     EliminaStruttura(mossa, items, infrastrutture, setMossa, addMove, navController)
@@ -143,7 +146,7 @@ fun ConfermaMossa(team : String, CO2 : Int, health : Int, energy : Int,
 @Composable
 fun PreviewEliminaStruttura(){
     GameSkeletonTheme {
-        ConfermaMossa("team1", 65, 70, 25, listOf(0,0),
+        ConfermaMossa(false, "team1", 65, 70, 25, listOf(0,0),
         emptyMap(), rememberNavController(), Mossa("", "", "", 0, 0, 0),
             emptyList(), { _: Mossa -> }
         ) { _: String, _: String, _: Int, _: Int -> }

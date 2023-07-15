@@ -124,10 +124,13 @@ class ShopScreen : ComponentActivity () {
 
 
     @Composable
-    fun Shop(navController: NavController, team : String, CO2 : Int, health : Int, energy : Int, level : Int,
+    fun Shop(surveyOn : Boolean, navController: NavController, team : String, CO2 : Int, health : Int, energy : Int, level : Int,
              infrastrutture : List<Infrastruttura>, turn : String, setMossa : (Mossa) -> Unit){
         val (view, setview) = remember{ mutableStateOf(1) }
         val lista = infrastrutture.filter { it.level == view }
+        if(surveyOn){
+            navController.navigate("poll")
+        }
         Scaffold(bottomBar = {BottomBar(
             SelectedIcon = 1, home = true, shop = true, poll = false, navController = navController
         )}) {
@@ -151,7 +154,7 @@ class ShopScreen : ComponentActivity () {
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-            Shop(rememberNavController(), "", 65, 70, 25, 3, emptyList(), "") { _: Mossa -> }
+            Shop(false, rememberNavController(), "", 65, 70, 25, 3, emptyList(), "") { _: Mossa -> }
         }
     }
 }

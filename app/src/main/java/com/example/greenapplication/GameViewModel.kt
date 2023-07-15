@@ -15,7 +15,6 @@ class GameViewModel: ViewModel() {
     fun formatTime(millis : Long) = gameManager.formatTime(millis)
     fun addMove(type : String, team : String, id : Int, square : Int) = gameManager.addMove(type, team, id, square)
     fun voteMove(key : Int) = gameManager.voteMove(key)
-    fun upgradeLevel(team: String) = gameManager.upgradeLevel(team)
 
     val players = gameManager.players
     val screenName = gameManager.screenName

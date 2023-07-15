@@ -44,6 +44,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     val l = vm.level.observeAsState()
     val level = l.value?.get(team)?: 1
     val t = vm.turn.observeAsState()
+    val moves = vm.moves.observeAsState().value?: emptyList()
     val turn = t.value?:""
     val items = i.value?.get(team)?.toSortedMap(compareBy{it.toInt()})?.
         mapValues { infrastrutture.find { inf -> inf.id == it.value.toInt() } }?: emptyMap<String,String>()
@@ -72,7 +73,9 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 timer = ms,
                 navController,
                 surveyOn,
-                items as Map<String, Infrastruttura>
+                items as Map<String, Infrastruttura>,
+                moves,
+                infrastrutture
             )}
             composable("detailCard?cardId={cardId}&squareId={squareId}",
                 arguments = listOf(
@@ -88,10 +91,10 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 }
             }
             composable("shop"){
-                ShopScreen().Shop(navController, team, CO2, happiness, energy, level, infrastrutture, turn, setMossa)
+                ShopScreen().Shop(surveyOn, navController, team, CO2, happiness, energy, level, infrastrutture, turn, setMossa)
             }
             composable("confirm"){
-                ConfermaMossa(team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
+                ConfermaMossa(surveyOn, team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,
                     navController, mossa , infrastrutture, setMossa, vm::addMove)
             }
             composable("select"){
