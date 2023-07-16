@@ -82,13 +82,13 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                         "add" -> {
                             val i = infrastrutture.find { i -> i.id == it.id }
                             if (i != null) {
-                                proposte[it.key] = "Costruire ${i.nome}"
+                                proposte[it.key] = "Costruire ${i.nome} in casella ${it.square}"
                             }
                         }
                         "delete" -> {
                             val i = items[it.square.toString()]
                             if (i != null) {
-                                proposte[it.key] = "Smantellare ${i.nome}"
+                                proposte[it.key] = "Smantellare ${i.nome} in casella ${it.square}"
                             }
                         }
                         "replace" -> {
