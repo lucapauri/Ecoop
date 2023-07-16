@@ -61,7 +61,6 @@ fun QRCodeScanner(navController: NavHostController,
                 }
                 //If you don't put this scanFlag = false, it will never work again.
                 //you can put a delay over 2 seconds and then scanFlag = false to prevent multiple scanning
-
             }
         }
     }
