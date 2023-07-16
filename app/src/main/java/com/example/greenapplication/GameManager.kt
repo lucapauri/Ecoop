@@ -62,7 +62,7 @@ class GameManager(private val scope:CoroutineScope) {
             com.example.greenapplication.R.drawable.biometano,
         "Impianto alimentato a biogas che produce energia elettrica e termicapartire da materiali organici."))
         items.add(Infrastruttura(6,"Termovalorizzatore",4,-3,30,10, 1,
-            com.example.greenapplication.R.drawable.biometano,
+            com.example.greenapplication.R.drawable.termovalorizzatore,
         "Inceneritore che converte il calore generato dalla combustione dei rifiuti in energia destinata ad altro uso."))
         items.add(Infrastruttura(7,"Metropolitana",3,6,12,10,2,
             com.example.greenapplication.R.drawable.metro,
