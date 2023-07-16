@@ -45,18 +45,20 @@ fun PollScreen(proposte : Map<String, String>, voted : Boolean, voteMove : (Stri
             Text(text = "Scegli l'opzione che preferisci: \n ", style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.background,)
             proposte.forEach { option ->
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = selectedProposte == option.key,
-                        onClick = {
-                            setSelectedProposte(option.key)
-                            voteMove(option.key)
-                                  },
-                        modifier = Modifier.padding(8.dp),
-                        enabled = !voted
-                    )
-                    Text(text = option.value, style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.onBackground, )
+                if(option.value!=""){
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = selectedProposte == option.key,
+                            onClick = {
+                                setSelectedProposte(option.key)
+                                voteMove(option.key)
+                            },
+                            modifier = Modifier.padding(8.dp),
+                            enabled = !voted
+                        )
+                        Text(text = option.value, style = MaterialTheme.typography.subtitle2,
+                            color = MaterialTheme.colors.onBackground, )
+                    }
                 }
             }
         }

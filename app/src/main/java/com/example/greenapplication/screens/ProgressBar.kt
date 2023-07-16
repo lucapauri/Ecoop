@@ -35,7 +35,7 @@ fun CustomProgressBar(
                 .background(foregroundColor)
                 .width(width * percent / 100)
         )
-        //if (isShownText) Text("${percent} %", modifier = Modifier.align(alignment = Alignment.Center), fontSize = 12.sp, color = MaterialTheme.colors.surface)
+        Text("$percent %", modifier = Modifier.align(alignment = Alignment.Center), fontSize = 12.sp, color = MaterialTheme.colors.surface)
     }
 }
 

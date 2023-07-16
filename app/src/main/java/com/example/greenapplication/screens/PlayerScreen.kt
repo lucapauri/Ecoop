@@ -54,7 +54,7 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
     if(ms.isEmpty()){
         ms = listOf(0,0)
     }
-    var startDestination = if (surveyOn) "poll" else "main"
+    var startDestination = if (surveyOn && team==turn) "poll" else "main"
     var proposte = mutableMapOf<String, String>()
     val navController = rememberNavController()
     var (mossa, setMossa) = remember{ mutableStateOf(Mossa("","", "", 0, 0, 0)) }
@@ -101,6 +101,9 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                         "upgrade" -> {
                             proposte[it.key] = "Sbloccare il livello successivo"
                         }
+                        "duplicate" -> {
+                            proposte[it.key] = ""
+                        }
                     }
                 }
                 Poll(
@@ -133,7 +136,8 @@ fun PlayerScreen(formatTime : (Long)->List<Int>, time : LiveData<Long>, team: St
                 }
             }
             composable("shop"){
-                ShopScreen().Shop(surveyOn, navController, team, CO2, happiness, energy, level, infrastrutture, turn, setMossa)
+                ShopScreen().Shop(surveyOn, navController, team, CO2, happiness, energy,
+                    level, infrastrutture, turn, setMossa, action)
             }
             composable("confirm"){
                 ConfermaMossa(surveyOn, team, CO2, happiness, energy, ms, items as Map<String, Infrastruttura>,

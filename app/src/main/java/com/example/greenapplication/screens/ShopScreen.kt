@@ -125,7 +125,8 @@ class ShopScreen : ComponentActivity () {
 
     @Composable
     fun Shop(surveyOn : Boolean, navController: NavController, team : String, CO2 : Int, health : Int, energy : Int, level : Int,
-             infrastrutture : List<Infrastruttura>, turn : String, setMossa : (Mossa) -> Unit){
+             infrastrutture : List<Infrastruttura>, turn : String, setMossa : (Mossa) -> Unit,
+             actionPoints : Int){
         val (view, setview) = remember{ mutableStateOf(1) }
         val lista = infrastrutture.filter { it.level == view }
         Scaffold(bottomBar = {BottomBar(
@@ -135,7 +136,8 @@ class ShopScreen : ComponentActivity () {
             ValueScreen(title = team, CO2, health, energy)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(150.dp))
-                TopBarShop(SelectedIcon = level, setview, setMossa, navController, team, turn) // 1 -> 2 livelli bloccati,
+                TopBarShop(SelectedIcon = level, setview, setMossa, navController, team, turn,
+                    actionPoints, energy) // 1 -> 2 livelli bloccati,
                 // 2 -> 1 livello bloccato,
                 // 3 -> tutti i livello sbloccati
                 ContentView(lista, navController) //permette di passare una
@@ -151,7 +153,7 @@ class ShopScreen : ComponentActivity () {
     @Composable
     fun PreviewShopScreen() {
         GameSkeletonTheme {
-            Shop(false, rememberNavController(), "", 65, 70, 25, 3, emptyList(), "") { _: Mossa -> }
+            //Shop(false, rememberNavController(), "", 65, 70, 25, 3, emptyList(), "") { _: Mossa -> }
         }
     }
 }

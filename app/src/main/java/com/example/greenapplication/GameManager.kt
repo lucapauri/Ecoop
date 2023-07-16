@@ -33,7 +33,7 @@ class GameManager(private val scope:CoroutineScope) {
     private val initialTimeTurn = 150000
     private val refreshTimer = 500
     private val initialActionsPoints = 2
-    private val upgradeCost = 20
+    private val upgradeCost = 200
 
     init {
         //firebase.setLogLevel(Logger.Level.DEBUG)
@@ -849,6 +849,7 @@ class GameManager(private val scope:CoroutineScope) {
                     updateEnergy(price, teamNames[index])
                     ref.child("actionPoints").setValue(initialActionsPoints)
                     ref.child("TimerTurn").setValue(initialTimeTurn.toLong())
+                    ref.child("moves").removeValue()
                 }
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
@@ -943,9 +944,13 @@ class GameManager(private val scope:CoroutineScope) {
     fun addMove(type : String, team : String, id : Int, square : Int){
         scope.launch {
             try {
+                val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
                 if(mutablemoves.value?.filter { it.type == type && it.id == id && it.square == square }?.size?:0 == 0){
                     val m = Mossa(firebaseAuth.uid.toString(), type, team, id, square, 0)
-                    val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
+                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
+                    moved = true
+                }else{
+                    val m = Mossa(firebaseAuth.uid.toString(), "duplicate", team, id, square, 0)
                     ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
                     moved = true
                 }

@@ -65,7 +65,7 @@ fun EliminaStruttura(mossa : Mossa, items : Map<String, Infrastruttura>,
         }
         "upgrade" -> {
             text1 = "Sbloccare"
-            text2 = "La tua proposta è sbloccare il livello successivo"
+            text2 = "La tua proposta è sbloccare il livello successivo (Costo 200)"
         }
     }
     Card(

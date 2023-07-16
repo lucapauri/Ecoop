@@ -35,7 +35,8 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
 fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->Unit,
-               navController: NavController, team : String, turn : String){
+               navController: NavController, team : String, turn : String, actionPoints : Int,
+                energy : Int){
     val isTurn = team == turn
 
     Box(modifier = Modifier
@@ -69,7 +70,7 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
                 }
                              },
                 modifier = Modifier.shadow(8.dp),
-                enabled = isTurn || SelectedIcon > 1
+                enabled = (isTurn && actionPoints > 1 && energy > 200) || SelectedIcon > 1
             ) {
                     Icon(imageVector =
                     if(SelectedIcon>1){
@@ -95,7 +96,7 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
                 }
             },
                 modifier = Modifier.shadow(8.dp),
-                enabled= (isTurn && SelectedIcon > 1) || SelectedIcon > 2
+                enabled= (isTurn && SelectedIcon > 1 && actionPoints > 1 && energy > 200) || SelectedIcon > 2
             ) {
                     Icon(imageVector =
                     if(SelectedIcon>2){
@@ -120,8 +121,8 @@ fun TopBarShop(SelectedIcon: Int, setView : (Int) -> Unit, setMossa : (Mossa)->U
 @Composable
 fun PreviewTopBar(){
     GameSkeletonTheme() {
-        TopBarShop(SelectedIcon = 3,{ _: Int -> },{_:Mossa->}, rememberNavController(), "", "")
-        ContentView()
+        //TopBarShop(SelectedIcon = 3,{ _: Int -> },{_:Mossa->}, rememberNavController(), "", "")
+        //ContentView()
     }
 }
 

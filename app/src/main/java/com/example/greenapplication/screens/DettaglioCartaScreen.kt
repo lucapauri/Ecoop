@@ -219,7 +219,7 @@ fun DettaglioCarta(CardData: Infrastruttura, square : Int = 0,
                       }
                     },
                     shape = RoundedCornerShape(20.dp),
-                    enabled = team == turn
+                    enabled = (team == turn && (square != 0 || energy >= CardData.price))
                 ) {
                     androidx.compose.material.Text(
                         text,
