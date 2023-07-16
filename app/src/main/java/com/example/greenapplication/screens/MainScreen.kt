@@ -8,10 +8,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenapplication.screens.EndScreen
 import com.example.greenapplication.screens.ProfScreen
 import it.polito.did.gameskeleton.GameViewModel
+import it.polito.did.gameskeleton.MainActivity
 import it.polito.did.gameskeleton.ScreenName
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(activity: MainActivity, modifier: Modifier = Modifier) {
     val vm: GameViewModel = viewModel()
     val players = vm.players.observeAsState()
     when (val screenName = vm.screenName.observeAsState().value) {
@@ -19,6 +20,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         is ScreenName.Initial -> InitialScreen(
             vm::onCreateNewGame,
             vm::onJoinGame,
+            activity,
             modifier)
         is ScreenName.SetupMatch -> SetupMatchScreen(
             screenName.matchId,

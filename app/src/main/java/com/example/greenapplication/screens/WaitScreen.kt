@@ -12,7 +12,7 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 @Composable
 fun WaitScreen(modifier: Modifier = Modifier) {
-    GenericScreen(title = "Waiting", modifier) {
+    GenericScreen(title = "In attesa", modifier) {
         Box(Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 Modifier

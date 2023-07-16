@@ -258,8 +258,8 @@ class GameManager(private val scope:CoroutineScope) {
     fun createNewGame() {
         scope.launch {
             try {
-                val ref = firebase.getReference("abc")
-                //val ref = firebase.reference.push()
+                //val ref = firebase.getReference("abc")
+                val ref = firebase.reference.push()
                 ref.setValue(
                     mapOf(
                         "date" to LocalDateTime.now().toString(),
@@ -303,6 +303,7 @@ class GameManager(private val scope:CoroutineScope) {
     }
 
     fun joinGame(matchId:String) {
+        Log.d("GameManager", "Entered")
         if (matchId.isEmpty()) return
         scope.launch {
             try {

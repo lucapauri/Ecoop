@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.greenapplication.R
 import com.example.greenapplication.pag1.*
 import com.example.greenapplication.ui.theme.GreenApplicationTheme
@@ -26,7 +27,7 @@ import it.polito.did.gameskeleton.ui.theme.GameSkeletonTheme
 
 
 @Composable
-fun IntroScreen(  modifier: Modifier = Modifier)
+fun IntroScreen(navController: NavController,  modifier: Modifier = Modifier)
 {
     Box(
         modifier = Modifier
@@ -70,7 +71,7 @@ fun IntroScreen(  modifier: Modifier = Modifier)
             Spacer(Modifier.weight(1f))
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {}, shape = RoundedCornerShape(20.dp)
+                onClick = {navController.navigate("initial")}, shape = RoundedCornerShape(20.dp)
             ) {
                 androidx.compose.material.Text("Inizia",
                     style = MaterialTheme.typography.button,
@@ -87,7 +88,7 @@ fun IntroScreen(  modifier: Modifier = Modifier)
 fun PreviewIntroScreen() {
     GameSkeletonTheme() {
 
-        IntroScreen()
+        //IntroScreen()
     }
 
 }

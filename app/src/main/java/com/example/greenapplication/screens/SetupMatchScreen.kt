@@ -25,7 +25,7 @@ fun SetupMatchScreen(matchId: String,
                      onStartMatch: () -> Unit,
                      modifier: Modifier = Modifier) {
 
-    GenericScreen(title = "Waiting for Players", modifier) {
+    GenericScreen(title = "In attesa dei giocatori", modifier) {
         BoxWithConstraints() {
             if (constraints.maxHeight> constraints.maxWidth) {
                 val size = constraints.maxWidth*9/10;
@@ -46,7 +46,7 @@ fun SetupMatchScreen(matchId: String,
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = "Connected players: ${players.value?.toString() ?: 0}",
+                        text = "Giocatori connessi: ${players.value?.toString() ?: 0}",
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                     Spacer(Modifier.weight(1f))
@@ -54,7 +54,8 @@ fun SetupMatchScreen(matchId: String,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
                         onClick = { onStartMatch() }) {
-                        Text("Start Match")
+                        Text("Inizia partita",
+                            color = MaterialTheme.colors.background)
                     }
                     Spacer(Modifier.weight(1f))
                 }
