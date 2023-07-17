@@ -487,7 +487,7 @@ class GameManager(private val scope:CoroutineScope) {
                 ref.child("screen").setValue("Playing").await()
                 teamNames.forEach{
                     //Initialize items level
-                    ref.child("level").child(it).setValue(1)
+                    ref.child("level").child(it).setValue(1).await()
                     //Listen items level change
                     ref.child("level").child(it).addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -508,25 +508,32 @@ class GameManager(private val scope:CoroutineScope) {
                     //Listen items change
                     team.addValueEventListener(object:ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            fetchItems(snapshot,it)
-                            ref.child("teams").child(it).child("CO2").setValue(sumCO2(it))
-                            ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it))
-                            updateSumItems(it)
-                            if(sumHappiness(it).toInt() - sumCO2(it).toInt() > winningTreshold){
-                                ref.child("winningTeam").setValue(it)
-                                ref.child("screen").addValueEventListener(
-                                    object: ValueEventListener {
-                                        override fun onDataChange(snapshot: DataSnapshot) {
-                                            mutableScreenName.value = getScreenName(snapshot.value?.toString()?: "")
-                                        }
+                            scope.launch {
+                                try{
+                                    fetchItems(snapshot,it)
+                                    ref.child("teams").child(it).child("CO2").setValue(sumCO2(it)).await()
+                                    ref.child("teams").child(it).child("Happiness").setValue(sumHappiness(it)).await()
+                                    updateSumItems(it)
+                                    if(sumHappiness(it).toInt() - sumCO2(it).toInt() > winningTreshold){
+                                        ref.child("winningTeam").setValue(it).await()
+                                        ref.child("screen").addValueEventListener(
+                                            object: ValueEventListener {
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    mutableScreenName.value = getScreenName(snapshot.value?.toString()?: "")
+                                                }
 
-                                        override fun onCancelled(error: DatabaseError) {
-                                            mutableScreenName.value = ScreenName.Error(error.message)
-                                        }
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    mutableScreenName.value = ScreenName.Error(error.message)
+                                                }
+                                            }
+                                        )
+                                        ref.child("screen").setValue("End").await()
                                     }
-                                )
-                                ref.child("screen").setValue("End")
+                                }catch (e : Exception){
+
+                                }
                             }
+
                         }
                         override fun onCancelled(error: DatabaseError) {
                         }
@@ -558,11 +565,11 @@ class GameManager(private val scope:CoroutineScope) {
                     //random items assignment
                     val squares = generateRandom(initialItems, 1, 9)
                     generateRandom(initialItems, 1, 6).forEachIndexed{ index, id ->
-                        team.child(squares[index].toString()).setValue(id.toString())
+                        team.child(squares[index].toString()).setValue(id.toString()).await()
                         updateSumItems(it)
                     }
                     //Initialize energy
-                    ref.child("teams").child(it).child("Energy").setValue(initialEnergy.toString())
+                    ref.child("teams").child(it).child("Energy").setValue(initialEnergy.toString()).await()
                 }
                 mutableScreenName.value = ScreenName.Dashboard
                 //Listen Timer
@@ -620,9 +627,9 @@ class GameManager(private val scope:CoroutineScope) {
                     }
                 })
                 //Initialize actions points
-                ref.child("actionPoints").setValue(initialActionsPoints)
+                ref.child("actionPoints").setValue(initialActionsPoints).await()
                 //Initialize survey on
-                ref.child("surveyOn").setValue(false)
+                ref.child("surveyOn").setValue(false).await()
                 //Listen survey on
                 ref.child("surveyOn").addValueEventListener(object:ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -637,28 +644,34 @@ class GameManager(private val scope:CoroutineScope) {
                 //Listen moves
                 ref.child("moves").addValueEventListener(object:ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val v = snapshot.value
-                        if(v != null && v is Map<*,*>){
-                            var l = mutableListOf<Mossa>()
-                            v.values.forEach {
-                                if(it != null && it is Map<*,*>){
-                                    l.add(Mossa(it["key"].toString(), it["type"].toString(), it["team"].toString(),
-                                        it["id"].toString().toInt(), it["square"].toString().toInt(), it["votes"].toString().toInt()
-                                    ))
+                        scope.launch {
+                            try {
+                                val v = snapshot.value
+                                if(v != null && v is Map<*,*>){
+                                    var l = mutableListOf<Mossa>()
+                                    v.values.forEach {
+                                        if(it != null && it is Map<*,*>){
+                                            l.add(Mossa(it["key"].toString(), it["type"].toString(), it["team"].toString(),
+                                                it["id"].toString().toInt(), it["square"].toString().toInt(), it["votes"].toString().toInt()
+                                            ))
+                                        }
+                                    }
+                                    if(l.size == players.value?.filter { it.value==turn.value }?.size ?: -1){
+                                        ref.child("surveyOn").setValue(true).await()
+                                    }
+                                    if(l.sumOf { it.votes } == players.value?.filter { it.value==turn.value }?.size ?: -1){
+                                        ref.child("surveyOn").setValue(false).await()
+                                        val max = l.maxByOrNull { it.votes }
+                                        if(max != null){
+                                            move(max)
+                                        }
+                                        ref.child("moves").removeValue().await()
+                                    }
+                                    mutablemoves.value = l
                                 }
+                            }catch(e : Exception){
+
                             }
-                            if(l.size == players.value?.filter { it.value==turn.value }?.size ?: -1){
-                                ref.child("surveyOn").setValue(true)
-                            }
-                            if(l.sumOf { it.votes } == players.value?.filter { it.value==turn.value }?.size ?: -1){
-                                ref.child("surveyOn").setValue(false)
-                                val max = l.maxByOrNull { it.votes }
-                                if(max != null){
-                                    move(max)
-                                }
-                                ref.child("moves").removeValue()
-                            }
-                            mutablemoves.value = l
                         }
                     }
                     override fun onCancelled(error: DatabaseError) {
@@ -674,7 +687,7 @@ class GameManager(private val scope:CoroutineScope) {
         scope.launch {
             try {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-                ref.child("level").child(team).setValue(ServerValue.increment(1))
+                ref.child("level").child(team).setValue(ServerValue.increment(1)).await()
             }catch (e : Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
@@ -695,7 +708,7 @@ class GameManager(private val scope:CoroutineScope) {
             val win = m.maxByOrNull { it.value }?.key?: ""
             try{
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-                ref.child("winningTeam").setValue(win)
+                ref.child("winningTeam").setValue(win).await()
                 ref.child("screen").addValueEventListener(
                     object: ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -707,7 +720,7 @@ class GameManager(private val scope:CoroutineScope) {
                         }
                     }
                 )
-                ref.child("screen").setValue("End")
+                ref.child("screen").setValue("End").await()
             }catch (e : Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
@@ -826,7 +839,7 @@ class GameManager(private val scope:CoroutineScope) {
                 items.forEach{
                     val id = it.id
                     val occurrencies = currentItems?.count { item -> item == id  }
-                    ref.child("teams").child(team).child("sumItems").child(id.toString()).setValue(occurrencies)
+                    ref.child("teams").child(team).child("sumItems").child(id.toString()).setValue(occurrencies).await()
                 }
             }catch (e : Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
@@ -847,9 +860,9 @@ class GameManager(private val scope:CoroutineScope) {
                     val objects = items.filter { ids?.contains(it.id.toString()) ?: false }
                     val price = objects.sumOf { it.energy }
                     updateEnergy(price, teamNames[index])
-                    ref.child("actionPoints").setValue(initialActionsPoints)
-                    ref.child("TimerTurn").setValue(initialTimeTurn.toLong())
-                    ref.child("moves").removeValue()
+                    ref.child("actionPoints").setValue(initialActionsPoints).await()
+                    ref.child("TimerTurn").setValue(initialTimeTurn.toLong()).await()
+                    ref.child("moves").removeValue().await()
                 }
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
@@ -888,7 +901,7 @@ class GameManager(private val scope:CoroutineScope) {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
                 val pEnergy = energy.value?.get(team)?.toInt() ?: 0
                 val sum = pEnergy + newEnergy
-                ref.child("teams").child(team).child("Energy").setValue(sum.toString())
+                ref.child("teams").child(team).child("Energy").setValue(sum.toString()).await()
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
@@ -900,7 +913,7 @@ class GameManager(private val scope:CoroutineScope) {
             try{
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
                 if((actionPoints.value?.compareTo(2) ?: -1) >= 0){
-                    ref.child("actionPoints").setValue(actionPoints.value?.minus(1))
+                    ref.child("actionPoints").setValue(actionPoints.value?.minus(1)).await()
                 }else{
                     nextTurn()
                 }
@@ -914,7 +927,7 @@ class GameManager(private val scope:CoroutineScope) {
         scope.launch {
             try {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
-                ref.child("teams").child(team).child("items").child(square.toString()).setValue(id.toString())
+                ref.child("teams").child(team).child("items").child(square.toString()).setValue(id.toString()).await()
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
             }
@@ -947,11 +960,10 @@ class GameManager(private val scope:CoroutineScope) {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
                 if(mutablemoves.value?.filter { it.type == type && it.id == id && it.square == square }?.size?:0 == 0){
                     val m = Mossa(firebaseAuth.uid.toString(), type, team, id, square, 0)
-                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
-                    moved = true
+                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m).await()
                 }else{
                     val m = Mossa(firebaseAuth.uid.toString(), "duplicate", team, id, square, 0)
-                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m)
+                    ref.child("moves").child(firebaseAuth.uid.toString()).setValue(m).await()
                     moved = true
                 }
             }catch (e:Exception){
@@ -965,7 +977,7 @@ class GameManager(private val scope:CoroutineScope) {
             try {
                 val ref = firebase.getReference(matchId.value ?: throw RuntimeException("Invalid State"))
                 ref.child("moves").child(key).child("votes")
-                    .setValue(ServerValue.increment(1))
+                    .setValue(ServerValue.increment(1)).await()
                 mutableVoted.value = true
             }catch (e:Exception){
                 mutableScreenName.value = ScreenName.Error(e.message?: "Generic error")
